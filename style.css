@@ -1,0 +1,33 @@
+.button {color: red;}
+body {
+    height: auto;
+}
+
+.kanban {
+    display: flex;
+    padding: 30px;
+    width: 100%;
+    background: #00ecbd;
+    border-radius: 5px;
+}
+
+.kanban_column-title {
+    background: #00cc00;
+    border-bottom: black;
+    border-width: 5px;
+    border-radius: 1%;
+}
+
+.kanban_column {
+    flex: 1;
+    /* Add other column styles here */
+}
+
+.kanban_items {
+    background-color: lightcoral;
+}
+
+#container {
+    width: 90%;
+    height: 100vh;
+}
