@@ -1,0 +1,68 @@
+[
+    {
+      "id": "column0",
+      "data": {
+        "id": "column0",
+        "name": "column",
+        "x": 0,
+        "y": 0,
+        "width": 528.3333333333334,
+        "height": 936,
+        "draggable": true
+      }
+    },
+    {
+      "id": "column1",
+      "data": {
+        "id": "column1",
+        "name": "column",
+        "x": 528.3333333333334,
+        "y": 0,
+        "width": 528.3333333333334,
+        "height": 936,
+        "draggable": true
+      }
+    },
+    {
+      "id": "column2",
+      "data": {
+        "id": "column2",
+        "name": "column",
+        "x": 1056.6666666666667,
+        "y": 0,
+        "width": 528.3333333333334,
+        "height": 936,
+        "draggable": true
+      }
+    },
+    {
+      "id": "note0",
+      "data": {
+        "x": 10,
+        "y": 100,
+        "draggable": true,
+        "id": "note0",
+        "name": "note"
+      }
+    },
+    {
+      "id": "note1",
+      "data": {
+        "x": 538.3333333333334,
+        "y": 200,
+        "draggable": true,
+        "id": "note1",
+        "name": "note"
+      }
+    },
+    {
+      "id": "note2",
+      "data": {
+        "x": 1066.6666666666667,
+        "y": 300,
+        "draggable": true,
+        "id": "note2",
+        "name": "note"
+      }
+    }
+  ]

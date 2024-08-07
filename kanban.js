@@ -7,23 +7,30 @@ const stage = new Konva.Stage({
 
 const layer = new Konva.Layer();
 stage.add(layer);
-
-const columns = ['To Do', 'In Progress', 'Done'];
+stage.on('')
+globalThis: var o = 0
+const columns = ['To Do', 'In Progress', 'Done', 'new', 'lol'];
 const columnWidth = stage.width() / columns.length;
 
 columns.forEach((column, index) => {
+
+    const column_id = "column" + o;
+    o = o + 1;
     const group = new Konva.Group({
+        id: column_id,
+        name: "column",
         x: index * columnWidth,
         y: 0,
         width: columnWidth,
         height: stage.height(),
         draggable: true,
+        
     });
 
     const rect = new Konva.Rect({
         width: columnWidth - 10,
         height: stage.height() - 10,
-        fill: '#ddd',
+        fill: '#dddddda6',
         stroke: '#000',
         strokeWidth: 2,
         cornerRadius: 10,
@@ -43,23 +50,28 @@ columns.forEach((column, index) => {
     layer.add(group);
     text.on('click', function(){
         text.setText(textarea.value)
+        rect.fill(color_pick.value)
     })
 });
 
 layer.draw();
-
 // Function to create a task
-function createNote(text, x, y) {
+function createNote(text, x, y, color="#fff") {
+    const local_state = state
+    const note_id = 'note' + i;
+    i = i + 1; 
     const taskGroup = new Konva.Group({
         x: x,
         y: y,
         draggable: true,
+        id: note_id,
+        name: "note",
     });
 
     const taskRect = new Konva.Rect({
         width: columnWidth - 20,
         height: 50,
-        fill: '#fff',
+        fill: color,
         stroke: '#000',
         strokeWidth: 1,
         cornerRadius: 5,
@@ -78,7 +90,10 @@ function createNote(text, x, y) {
     layer.add(taskGroup);
     layer.draw();
 
-    taskGroup.on('dbclick', function() {
+    state.push(taskGroup)
+    
+
+    /*taskGroup.on('dblclick', function() {
         // Find the text node
         const textNode = taskText
 
@@ -86,25 +101,60 @@ function createNote(text, x, y) {
 
         layer.draw();
 
-    });
-    taskGroup.on('click', function() {
-        const textNode = taskText
-        textarea.style.display = 'block';
-        textarea.style.position = 'fixed';
-        textarea.style.left = taskText.x() + 'px';
-        textarea.style.top = taskText.y() + 'px';
-        textarea.style.width = taskText.width() + 'px';
-        textarea.style.height = taskText.height() + 'px';
-        textarea.value = taskText.text();
-        textarea.focus()
-        while (textarea)
-            textNode.setText(textarea.value);
+    });*/
+    taskGroup.on('', function() {
+        const textNode = (taskText, taskRect)
+        taskRect.fill(color_pick.value);
+
+        lol(textNode)
+        
         
     });
+    taskGroup.on('dragend', function(){
+        const positi_on = taskGroup.getAbsolutePosition();
+        const ste_ee = taskGroup.id();
+        
+        save_state_change([ste_ee,positi_on])
+    })
+    taskText.on('dblclick dbltap', () => {
+        var local_parent = taskGroup.id();
+        var textpos = taskText.getAbsolutePosition();
+        var stageBox = stage.container().getBoundingClientRect();
+        var areapos = {
+            x: stageBox.left + textpos.x,
+            y: stageBox.top + textpos.y,
+        };
+        var textarea = document.createElement('textarea');
+        document.body.appendChild(textarea);
+        textarea.value = taskText.text()
+
+        textarea.style.position = 'absolute';
+        textarea.style.top = areapos.y + 'px';
+        textarea.style.left = areapos.x + 'px';
+        textarea.style.width = taskRect.width() + 'px';
+        textarea.style.height = taskRect.height() + 'px';
+        lol(areapos)
+
+        textarea.focus();
+        textarea.addEventListener('keydown', function (e) {
+            // hide on enter
+            lol(e.key)
+            if (e.key === "Enter") {
+                taskText.width(taskRect.width());
+                taskText.wrap('word');
+              taskText.text(textarea.value);
+              
+              document.body.removeChild(textarea);
+              taskRect.height(taskText.height())
+              save_state_change([local_parent,taskText.text(),taskRect.height()])
+            }
+            if (e.key === "Escape") {
+                document.body.removeChild(textarea)
+            }
+          });
+    })
     
 }
-
-// Add this to kanban.js
 
 function addColumn() {
     const newColumnIndex = columns.length;
@@ -115,6 +165,7 @@ function addColumn() {
         width: columnWidth,
         height: stage.height(),
         draggable: true,
+        name: "column"
     });
 
     const rect = new Konva.Rect({
@@ -143,10 +194,11 @@ function addColumn() {
     
 }
 
-function addTask() {
+function addTask(value=textarea.value) {
     
-    createNote(textarea.value, 10, 400);
+    createNote(value, 10, 400, color_pick);
 }
+
 
 
 // Example tasks
