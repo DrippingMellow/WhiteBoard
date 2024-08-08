@@ -8,6 +8,7 @@ const stage = new Konva.Stage({
 const layer = new Konva.Layer();
 const layertwo = new Konva.Layer();
 const layerguide = new Konva.Layer();
+const state = []
 stage.add(layer);
 stage.add(layertwo);
 stage.add(layerguide)
@@ -74,7 +75,7 @@ class ColCol {
 
     createNewColumn(name) {
         if (columns.length >= "10") {
-            danger.class = btn-danger;
+            //danger.classList = "btn-danger";
             return;
         };
         var oldColWidth = 0
@@ -194,7 +195,7 @@ class Notes {
         layertwo.add(taskGroup);
         layertwo.draw();
 
-        state.push(taskGroup)
+        state.push(note_id, {object: taskGroup, group: taskGroup.x()})
 
         taskGroup.on('mouseover', function () {
             document.body.style.cursor = 'pointer';
@@ -210,6 +211,10 @@ class Notes {
         taskGroup.on('dragend', function(){
             const positi_on = taskGroup.getAbsolutePosition();
             const ste_ee = taskGroup.id();
+
+            const index = state.indexOf(note_id) + 1
+            state[index].group = taskGroup.x()
+            lol(index)
             
             save_state_change([ste_ee,positi_on])
         });
@@ -289,7 +294,7 @@ class Notes {
                 }
             });
         });
-    }
+    };
 
     resize_nodes(oldColWidth) {
         const all_notes = layertwo.find('.note')
@@ -319,6 +324,23 @@ class Notes {
             }
         })
         layertwo.draw()
+    };
+
+    tasksToTop() {
+        state.forEach((a) => {
+            if (typeof(a) === "string"){
+                return;
+            }
+            lol(typeof(a))
+            const {group, object} = a
+            lol(group, object)
+            if (group === object.x()) {
+                lol(object.x)
+                var r = 40
+                object.position({x: object.x(), y: r})
+            }
+            
+        })
     }
 
 }
