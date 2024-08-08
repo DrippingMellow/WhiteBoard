@@ -14,7 +14,7 @@
     <header>
         <h1>Hi</h1>
     </header>
-    <button class="btn btn-outline-danger">
+    <button it="danger" class="btn btn-outline-danger">
         Danger
 
     </button>
@@ -34,41 +34,4 @@
     
     <div id="container"></div>
     <script src="kanban.js"></script>
-    <script>
-        var stage = new Konva.Stage({
-          container: 'container',
-          width: window.innerWidth,
-          height: window.innerHeight,
-        });
-      
-        // add canvas element
-        var layer = new Konva.Layer();
-        stage.add(layer);
-      
-        // create shape
-        var box = new Konva.Rect({
-          x: 50,
-          y: 50,
-          width: 100,
-          height: 50,
-          fill: '#00D2FF',
-          stroke: 'black',
-          strokeWidth: 4,
-          draggable: true,
-        });
-        layer.add(box);
-      
-        // add cursor styling
-        box.on('mouseover', function () {
-          document.body.style.cursor = 'pointer';
-        });
-        box.on('mouseout', function () {
-          document.body.style.cursor = 'default';
-        });
-        box.on('lick', function () {
-            document.createElement('input')
-            $(box).append("<input value='TEST'/>")
-        })
-      </script>
-
 </body>

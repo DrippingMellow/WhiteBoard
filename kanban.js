@@ -129,7 +129,7 @@ layer.draw();*/
 // Function to create a task
 
 class Notes {
-    createNote(text, x, y, color="#fff") {
+    createNote(titletext, text, x, y, color="#fff") {
         const local_state = state
         const note_id = 'note' + i;
         i = i + 1; 
@@ -149,17 +149,29 @@ class Notes {
             strokeWidth: 1,
             cornerRadius: 5,
             name: "rect",
+            maxheight: 250,
         });
+
+        const taskTitle = new Konva.Text({
+            text: titletext,
+            fontSize: 20,
+            padding: 2,
+            height: 20,
+            ellipsis: true,
+            width: taskRect.width()-10,
+        })
 
         const taskText = new Konva.Text({
             text: text,
             fontSize: 18,
             fontFamily: 'Calibri',
             fill: '#000',
-            padding: 10,
+            x: 10,
+            y: 22
         });
 
         taskGroup.add(taskRect);
+        taskGroup.add(taskTitle)
         taskGroup.add(taskText);
         layertwo.add(taskGroup);
         layertwo.draw();
@@ -198,8 +210,8 @@ class Notes {
             textarea.style.position = 'absolute';
             textarea.style.top = areapos.y + 'px';
             textarea.style.left = areapos.x + 'px';
-            textarea.style.width = taskRect.width() + 'px';
-            textarea.style.height = taskRect.height() + 'px';
+            textarea.style.width = (taskRect.width()-10) + 'px';
+            textarea.style.height = (taskRect.height()-22) + 'px';
             lol(areapos)
 
             textarea.focus();
@@ -207,13 +219,53 @@ class Notes {
                 // hide on enter
                 lol(e.key)
                 if (e.key === "Enter") {
-                    taskText.width(taskRect.width());
+                    taskText.width(taskRect.width()-10);
                     taskText.wrap('word');
                 taskText.text(textarea.value);
                 
                 document.body.removeChild(textarea);
-                taskRect.height(taskText.height())
+                taskRect.height(taskText.height()+22)
+                if (taskRect.height() >= 250) {
+                    taskText.height(230)
+                    taskRect.height(taskText.height()+22)
+                }
                 save_state_change([local_parent,taskText.text(),taskRect.height()])
+                }
+                if (e.key === "Escape") {
+                    document.body.removeChild(textarea)
+                }
+            });
+        });
+        taskTitle.on('click tap', () => {
+            var local_parent = taskGroup.id();
+            var textpos = taskTitle.getAbsolutePosition();
+            var stageBox = stage.container().getBoundingClientRect();
+            var areapos = {
+                x: stageBox.left + textpos.x,
+                y: stageBox.top + textpos.y,
+            };
+            var textarea = document.createElement('input');
+            document.body.appendChild(textarea);
+            textarea.value = taskTitle.text()
+
+            textarea.style.position = 'absolute';
+            textarea.style.top = areapos.y + 'px';
+            textarea.style.left = areapos.x + 'px';
+            textarea.style.width = taskRect.width() + 'px';
+            textarea.style.height = 22 + 'px';
+            lol(areapos)
+
+            textarea.focus();
+            textarea.addEventListener('keydown', function (e) {
+                // hide on enter
+                lol(e.key)
+                if (e.key === "Enter") {
+                    taskTitle.width(taskRect.width());
+                    taskTitle.wrap('char')
+                taskTitle.text(textarea.value);
+                
+                document.body.removeChild(textarea);
+                save_state_change([local_parent,taskTitle.text()])
                 }
                 if (e.key === "Escape") {
                     document.body.removeChild(textarea)
@@ -239,7 +291,16 @@ class Notes {
             item.position({x: newx, y: itemy})
             var myitem = item.getChildren()
             lol(myitem[0]);
-            myitem[0].attrs.width = columnWidth-20
+            const rect = myitem[0]
+            const title = myitem[1]
+            const text = myitem[2]
+            rect.width(columnWidth-20);
+            title.width(rect.width()-10)
+            text.width(rect.width()-10)
+            if (text.height() >= 250-20) {
+                text.height(230)
+                rect.height(250)
+            }
             
 
         })
@@ -269,6 +330,6 @@ function addTask(value=textarea.value) {
 
 
 // Example tasks
-notes.createNote('Task 1', 10, 100);
-notes.createNote('Task 2', columnWidth + 10, 200);
-notes.createNote('Task 3', 2 * columnWidth + 10, 300);
+notes.createNote('Task 1', "lol", 10, 100);
+notes.createNote('Task 2', "beschreibung", columnWidth + 10, 200);
+notes.createNote('Task 3', "etc", 2 * columnWidth + 10, 300);
