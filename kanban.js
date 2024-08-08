@@ -56,6 +56,7 @@ class ColCol {
                 height: text.height(),
                 fill: "#fcd",
                 cornerRadius:([10, 10, 0, 0]),
+                name: 'textrec'
             })
             
             group.add(textrec);
@@ -89,6 +90,11 @@ class ColCol {
 
         
     };
+
+    resetColumnPos() {
+        layer.destroyChildren()
+        this.initColumns()
+    }
 };
 
 const colcol = new ColCol();
@@ -275,7 +281,6 @@ class Notes {
                     taskTitle.width(taskRect.width());
                     taskTitle.wrap('char')
                 taskTitle.text(textarea.value);
-                
                 document.body.removeChild(textarea);
                 save_state_change([local_parent,taskTitle.text()])
                 }
@@ -293,7 +298,6 @@ class Notes {
         all_notes.forEach((item) => {
             const itemx = item.getAbsolutePosition().x;
             const itemy = item.getAbsolutePosition().y;
-
             lol(itemx-10)
             lol(oldColWidth)
             const x = ((item.getAbsolutePosition().x - 10) / oldColWidth);
@@ -313,8 +317,6 @@ class Notes {
                 text.height(230)
                 rect.height(250)
             }
-            
-
         })
         layertwo.draw()
     }
@@ -326,17 +328,10 @@ const notes = new Notes()
 function addColumn() {
     value = textarea.value
     colcol.createNewColumn(value)
-
-
-    
-    
-
-    
 }
 
 function addTask(value=textarea.value) {
-    
-    notes.createNote(value, 10, 400, color_pick);
+    notes.createNote(title, value, 10, 400, color_pick);
 }
 
 
@@ -363,11 +358,19 @@ function getLineGuideStops(skipShape) {
               }
               var box = guideItem.getClientRect();
               // and we can snap to all edges of shapes
-              vertical.push([box.x, box.x + box.width, box.x + box.width / 2]);
+            if (guideItem.name() === 'column') {
+                vertical.push([box.x + box.width-1, box.x + box.width / 2]);
+              horizontal.push([box.y, box.y + box.height, box.y + box.height / 2]);
+              return;
+            }
               horizontal.push([box.y, box.y + box.height, box.y + box.height / 2]);
             });
             
         });
+        const texthigh = stage.findOne('.textrec');
+        const y = texthigh.getAbsolutePosition().y
+        horizontal.push([y + texthigh.height()])
+        lol(vertical)
         return {
             vertical: vertical.flat(),
             horizontal: horizontal.flat(),
@@ -395,7 +398,7 @@ function getLineGuideStops(skipShape) {
         },*/
         {
           guide: Math.round(box.x + box.width),
-          offset: Math.round(absPos.x - box.x - box.width-1),
+          offset: Math.round(absPos.x - box.x - box.width),
           snap: 'end',
         },
       ],
