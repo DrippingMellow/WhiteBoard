@@ -407,10 +407,8 @@ function getLineGuideStops(skipShape) {
             horizontal: horizontal.flat(),
         };
     };
-
   // what points of the object will trigger to snapping?
-  // it can be just center of the object
-  // but we will enable all edges and center
+  // enables snapping horizontally all edges and center and Vertically just end
   function getObjectSnappingEdges(node) {
     var box = node.getClientRect();
     var absPos = node.absolutePosition();
