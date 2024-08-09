@@ -64,3 +64,16 @@ function save_name_change(value) {
 document.addEventListener("DOMContentLoaded", () => {
 	start();
 })
+
+// setup menu
+let currentShape;
+var menuNode = document.getElementById('menu');
+
+document.getElementById('delete-button').addEventListener('click', () => {
+  currentShape.destroy();
+});
+
+window.addEventListener('click', () => {
+  // hide menu
+  menuNode.style.display = 'none';
+});
