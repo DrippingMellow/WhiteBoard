@@ -328,28 +328,29 @@ class Notes {
 
     tasksToTop() {
       var r = 44
-      var current_group = 0
-        state.forEach((a) => {
-            if (typeof(a) === "string"){
-                return;
-            }
-            lol(r)
-            const {group, object} = a
-            lol(group, object)
-            if (group != current_group) {
-              r = 44 // reset to top
-            }
-            if (group === object.x()) {
-              current_group = object.x()
-                lol(object)
-                const child = object.getChildren()[0]
-                var start = 44
-                object.position({x: object.x(), y: r})
-                r = r + child.height()
-                lol(r)
-            }
-            
-        })
+      var current_group = ([])
+
+      state.forEach((a) => {
+        if (typeof(a) === "string"){
+          return;
+        }
+        lol(r)
+        const {group, object} = a
+        lol(group, object)
+        if (group != current_group) {
+          r = 44 // reset to top
+        }
+        if (group === object.x()) {
+          current_group = object.x()
+          lol(object)
+          const child = object.getChildren()[0]
+          var start = 44
+          object.position({x: object.x(), y: r})
+          r = r + child.height()
+          lol(r)
+        }
+          
+      })
     }
 
 }
@@ -361,7 +362,7 @@ function addColumn() {
     colcol.createNewColumn(value)
 }
 
-function addTask(value=textarea.value) {
+function addTask(title=textarea.value, value="no value") {
     notes.createNote(title, value, 10, 400, color_pick);
 }
 
