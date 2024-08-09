@@ -63,17 +63,39 @@ function save_name_change(value) {
 
 document.addEventListener("DOMContentLoaded", () => {
 	start();
+	var menuNode = document.getElementById('menu');
+	menuNode.style.display = 'none'
+
+	document.getElementById('delete-button').addEventListener('click', () => {
+  		var parent = currentShape.getParent();
+		parent.destroy();
+	});
+
+	window.addEventListener('click', () => {
+  		// hide menu
+  		lol("lol")
+  		menuNode.style.display = 'none';
+	});
+	// setup menu
+	let currentShape;
+
+
+	stage.on('contextmenu', function (e) {
+		// prevent default behavior
+		e.evt.preventDefault();
+		if (e.target === stage) {
+		// if we are on empty place of the stage we will do nothing
+		return;
+		}
+		currentShape = e.target;
+		
+		// show menu
+		menuNode.style.position = 'absolute'
+		menuNode.style.display = 'initial';
+		var containerRect = stage.container().getBoundingClientRect();
+		menuNode.style.top =
+		containerRect.top + stage.getPointerPosition().y + 4 + 'px';
+		menuNode.style.left =
+		containerRect.left + stage.getPointerPosition().x + 4 + 'px';
+	});
 })
-
-// setup menu
-let currentShape;
-var menuNode = document.getElementById('menu');
-
-document.getElementById('delete-button').addEventListener('click', () => {
-  currentShape.destroy();
-});
-
-window.addEventListener('click', () => {
-  // hide menu
-  menuNode.style.display = 'none';
-});
