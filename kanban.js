@@ -327,17 +327,26 @@ class Notes {
     };
 
     tasksToTop() {
+      var r = 44
+      var current_group = 0
         state.forEach((a) => {
             if (typeof(a) === "string"){
                 return;
             }
-            lol(typeof(a))
+            lol(r)
             const {group, object} = a
             lol(group, object)
+            if (group != current_group) {
+              r = 44 // reset to top
+            }
             if (group === object.x()) {
-                lol(object.x)
-                var r = 40
+              current_group = object.x()
+                lol(object)
+                const child = object.getChildren()[0]
+                var start = 44
                 object.position({x: object.x(), y: r})
+                r = r + child.height()
+                lol(r)
             }
             
         })
