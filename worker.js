@@ -1,5 +1,7 @@
 globalThis: var i = 0
 globalThis: state = []
+globalThis: a = ""
+globalThis: board = 0
 
 Cache.bind()
 
@@ -10,13 +12,14 @@ function lol(value) {
 //const type = {"note": createNote(), "img_note": createImgNote(), "column": addColumn()}
 
 async function start() {
-	const requestURL = "https://localhost:7064/api/TodoItems";
+	const requestURL = "https://localhost:7064/api/GetTodoItems";
 	//const request = new Request(requestURL);
 
 	$.ajax({
 		url: requestURL,
 		crossDomain: true,
-		dataType: "json jsonp",
+		ContentType: "json",
+		dataType: "json",
 		success: function(data) {
             lol(data)
 			return(data)
@@ -28,7 +31,33 @@ async function start() {
 }
 
 function saveBoardState() {
-    const a = stage.toJson()
+    object = stage.toObject()
+	const a = JSON.stringify(object, null, 2)
+	lol(a)
+	const requestURL = "https://localhost:7064/api/SaveNew";
+	b = {
+		"name": "nomnom","description": "this is text","ownerId": 1
+	};
+	
+	//const request = new Request(requestURL);
+
+	$.ajax({
+		type: "POST",
+		url: requestURL,
+		crossDomain: true,
+		dataType: 'json',
+        contentType: 'application/json',
+		data: JSON.stringify(b, null, 2),
+		
+		success: function(data) {
+            lol(data)
+			board.Id = data
+			return(data)
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			console.error('Error:', textStatus, errorThrown);
+		}
+	})
 };
 
 function save_state_change(value) {
@@ -46,7 +75,35 @@ function save_name_change(value) {
 	lol(value + "saved in: ")
 }
 
+function loadkanban() {
+	colcol.initColumns()
+	notes.createNote('Task 1', "lol", 10, 100);
+	notes.createNote('Task 2', "beschreibung", columnWidth + 10, 200);
+	notes.createNote('Task 3', "etc", 2 * columnWidth + 10, 300);
+}
+
+function loadkanson() {
+	const state = []
+	const requestURL = "https://localhost:7064/api/GetTodoItem/Id";
+	//const request = new Request(requestURL);
+
+	$.ajax({
+		url: requestURL,
+		crossDomain: true,
+		dataType: "json",
+		success: function(data) {
+            lol(data)
+			return(data)
+		},
+		error: function(jqXHR, textStatus, errorThrown) {
+			console.error('Error:', textStatus, errorThrown);
+		}
+	})
+	stage.create(data)
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+	loadkanban()
 	start();
 	var menuNode = document.getElementById('menu');
 	menuNode.style.display = 'none'

@@ -98,52 +98,6 @@ class ColCol {
     }
 };
 
-const colcol = new ColCol();
-colcol.initColumns();
-
-/*columns.forEach((column, index) => {
-
-    const column_id = "column" + o;
-    o = o + 1;
-    const group = new Konva.Group({
-        id: column_id,
-        name: "column",
-        x: index * columnWidth,
-        y: 0,
-        width: columnWidth,
-        height: stage.height(),
-        draggable: true,
-        
-    });
-
-    const rect = new Konva.Rect({
-        width: columnWidth - 10,
-        height: stage.height() - 10,
-        fill: '#dddddda6',
-        stroke: '#000',
-        strokeWidth: 2,
-        cornerRadius: 10,
-    });
-
-    const text = new Konva.Text({
-        text: column,
-        fontSize: 24,
-        fontFamily: 'Calibri',
-        fill: '#000',
-        padding: 10,
-        align: 'center',
-    });
-
-    group.add(rect);
-    group.add(text);
-    layer.add(group);
-    text.on('click', function(){
-        text.setText(textarea.value)
-        rect.fill(color_pick.value)
-    })
-});
-
-layer.draw();*/
 
 // Function to create a task
 
@@ -355,6 +309,7 @@ class Notes {
 
 }
 
+const colcol = new ColCol();
 const notes = new Notes()
 
 function addColumn() {
@@ -369,9 +324,7 @@ function addTask(title=textarea.value, value="no value") {
 
 
 // Example tasks
-notes.createNote('Task 1', "lol", 10, 100);
-notes.createNote('Task 2', "beschreibung", columnWidth + 10, 200);
-notes.createNote('Task 3', "etc", 2 * columnWidth + 10, 300);
+
 
 
 // were can we snap our objects?
