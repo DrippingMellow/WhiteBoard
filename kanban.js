@@ -1,10 +1,11 @@
 // kanban.js
 const stage = new Konva.Stage({
-    container: 'container',
+    container: document.getElementById('container'),
     width: window.innerWidth,
     height: window.innerHeight,
 });
-
+globalThis: columns = []
+globalThis: var o = 0
 const layer = new Konva.Layer();
 const layertwo = new Konva.Layer();
 const layerguide = new Konva.Layer();
@@ -13,13 +14,16 @@ stage.add(layer);
 stage.add(layertwo);
 stage.add(layerguide)
 stage.on('')
-globalThis: var o = 0
-globalThis: var columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
-columns_width = []
-var columnWidth = stage.width() / columns.length;
+// if (d == null){
+  
+  //columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
+//}
+var columnWidth
+
 
 class ColCol {
     initColumns() {
+        //columnWidth = stage.width() / columns.length;
         columns.forEach((column, index) => {
           let columnName = column.name
           column.start = (index * columnWidth);
@@ -102,7 +106,6 @@ class ColCol {
     }
 };
 
-
 // Function to create a task
 
 class Notes {
@@ -177,11 +180,12 @@ class Notes {
                 break;
               }
             }
+            let current = state[index].objectData
             
-            state[index].group = taskGroup.x()
-            state[index].cords = positi_on
+            current.group = taskGroup.x()
+            current.cords = positi_on
             lol(index)
-            save_state_change([nodeId,positi_on])
+            save_state_change([nodeId,positi_on, state[index]])
         });
         taskText.on('click tap', () => {
             var local_parent = taskGroup.id();
@@ -325,8 +329,7 @@ class Notes {
 const colcol = new ColCol();
 const notes = new Notes()
 
-function addColumn() {
-    value = textarea.value
+function addColumn(value = textarea.value) {
     colcol.createNewColumn(value)
 }
 
@@ -586,3 +589,5 @@ function getLineGuideStops(skipShape) {
     // clear all previous lines on the screen
     layer.find('.guid-line').forEach((l) => l.destroy());
   });
+
+start()

@@ -2,7 +2,7 @@ globalThis: var i = 0
 globalThis: state = []
 globalThis: a = ""
 globalThis: board = 0
-var d =""
+globalThis: d = null
 
 Cache.bind()
 
@@ -24,15 +24,16 @@ async function start() {
 		dataType: 'json',
         contentType: 'application/json',
 		success: function(data) {
-			d = atob(atob(data.json))
+			d = JSON.parse(atob(atob(data.json)))
             lol(d);
 			return(data);
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.error('Error:', textStatus, errorThrown);
 		}
+	}).done(function() {
+		loadkanban();
 	});
-	
 }
 
 function saveBoardState() {
@@ -43,7 +44,6 @@ function saveBoardState() {
 		{
 			if (column.start < node.objectData.group && node.objectData.group < column.end ){
 				nodes.push(node)
-				state.splice(index,1)
 				lol(column);
 			}
 		});
@@ -53,8 +53,6 @@ function saveBoardState() {
 	const requestURL = "https://localhost:7064/api/PutTodoItem";
 	lol(board)
 	a = btoa(JSON.stringify(board, null,2))
-	lol(stage.toJSON())
-	lol(atob(a))
 	//const request = new Request(requestURL);
 
 	$.ajax({
@@ -92,35 +90,27 @@ function save_name_change(value) {
 }
 
 function loadkanban() {
+	columns = []
+	columnWidth = stage.width() / d.columns.length
+	
+	d.columns.forEach((column) => {
+		columns.push({name: column.name})
+		lol(column)
+		column.nodes.forEach((node) => {
+			lol(node)
+			obj = node.objectData
+			lol(obj)
+			lol([obj.title, obj.text, (obj.cords[0] || obj.cords.x), (obj.cords[1] || obj.cords.y), obj.color])
+			notes.createNote(obj.title, obj.text, (obj.cords[0] || obj.cords.x), (obj.cords[1] || obj.cords.y), obj.color)
+		})
+	});	
 	colcol.initColumns()
-	notes.createNote('Task 1', "lol", 10, 100);
-	notes.createNote('Task 2', "beschreibung", columnWidth + 10, 200);
-	notes.createNote('Task 3', "etc", 2 * columnWidth + 10, 300);
 }
 
-function loadkanson() {
-	const state = []
-	const requestURL = "https://localhost:7064/api/GetTodoItem/Id";
-	//const request = new Request(requestURL);
-
-	$.ajax({
-		url: requestURL,
-		crossDomain: true,
-		dataType: "json",
-		success: function(data) {
-            lol(data)
-			return(data)
-		},
-		error: function(jqXHR, textStatus, errorThrown) {
-			console.error('Error:', textStatus, errorThrown);
-		}
-	})
-	stage.create(data)
-}
 
 document.addEventListener("DOMContentLoaded", () => {
-	loadkanban()
-	start();
+	// loadkanban()
+	// start();
 	var menuNode = document.getElementById('menu');
 	menuNode.style.display = 'none'
 
