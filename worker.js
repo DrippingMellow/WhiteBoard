@@ -24,7 +24,8 @@ async function start() {
 		dataType: 'json',
         contentType: 'application/json',
 		success: function(data) {
-            lol(data);
+			d = atob(atob(data.json))
+            lol(d);
 			return(data);
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
@@ -35,14 +36,25 @@ async function start() {
 }
 
 function saveBoardState() {
-    object = stage.toJSON()
-	const a = JSON.parse(object)
-	lol(a)
+	columns.forEach((column) =>
+	{
+		const nodes = new Array;
+		state.forEach((node, index) =>
+		{
+			if (column.start < node.objectData.group && node.objectData.group < column.end ){
+				nodes.push(node)
+				state.splice(index,1)
+				lol(column);
+			}
+		});
+		column.nodes = nodes;
+	});
+	const board = {boardid: 1, columns}
 	const requestURL = "https://localhost:7064/api/PutTodoItem";
-	b = {
-		"name": "nomnom","description": "this is text","ownerId": 1
-	};
-	
+	lol(board)
+	a = btoa(JSON.stringify(board, null,2))
+	lol(stage.toJSON())
+	lol(atob(a))
 	//const request = new Request(requestURL);
 
 	$.ajax({
@@ -51,7 +63,7 @@ function saveBoardState() {
 		crossDomain: true,
 		dataType: 'json',
         contentType: 'application/json',
-		data: JSON.stringify({Json: btoa(object), Id: 13}, null, 2),
+		data: JSON.stringify({Json: btoa(a), Id: 13}, null, 2),
 		
 		success: function(data) {
             lol(data)

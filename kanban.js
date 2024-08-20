@@ -14,19 +14,23 @@ stage.add(layertwo);
 stage.add(layerguide)
 stage.on('')
 globalThis: var o = 0
-globalThis: var columns = ['To Do', 'In Progress', 'Done', 'new', 'lol'];
+globalThis: var columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
+columns_width = []
 var columnWidth = stage.width() / columns.length;
 
 class ColCol {
     initColumns() {
         columns.forEach((column, index) => {
+          let columnName = column.name
+          column.start = (index * columnWidth);
+          column.end = (column.start + columnWidth - 10)
 
             const column_id = "column" + o;
             o = o + 1;
             const group = new Konva.Group({
                 id: column_id,
                 name: "column",
-                x: index * columnWidth,
+                x: column.start,
                 y: 0,
                 width: columnWidth,
                 height: stage.height(),
@@ -44,7 +48,7 @@ class ColCol {
             });
         
             const text = new Konva.Text({
-                text: column,
+                text: columnName,
                 fontSize: 24,
                 fontFamily: 'Calibri',
                 fill: '#000',
@@ -149,7 +153,7 @@ class Notes {
         layertwo.add(taskGroup);
         layertwo.draw();
 
-        state.push(note_id, {object: taskGroup, group: taskGroup.x()})
+        state.push({id:note_id, objectData: {group: taskGroup.x(), title: titletext, text: text, cords:[x, y],  color: color}})
 
         taskGroup.on('mouseover', function () {
             document.body.style.cursor = 'pointer';
@@ -164,17 +168,25 @@ class Notes {
         });
         taskGroup.on('dragend', function(){
             const positi_on = taskGroup.getAbsolutePosition();
-            const ste_ee = taskGroup.id();
-
-            const index = state.indexOf(note_id) + 1
-            state[index].group = taskGroup.x()
-            lol(index)
+            const nodeId = taskGroup.id();
+            let index = 0
+            for (let iterator = 0; iterator < state.length; iterator++) {
+              const element = state[iterator];
+              if (element.id == note_id){
+                index = iterator
+                break;
+              }
+            }
             
-            save_state_change([ste_ee,positi_on])
+            state[index].group = taskGroup.x()
+            state[index].cords = positi_on
+            lol(index)
+            save_state_change([nodeId,positi_on])
         });
         taskText.on('click tap', () => {
             var local_parent = taskGroup.id();
-            var textpos = taskText.getAbsolutePosition();
+            var textpos = taskText.getRelativePosition();
+            lol(textpos)
             var stageBox = stage.container().getBoundingClientRect();
             var areapos = {
                 x: stageBox.left + textpos.x,
@@ -250,6 +262,7 @@ class Notes {
         });
     };
 
+    /// TODO: Position Change correction, as adding columns brings the tasks to wrong positions. ///
     resize_nodes(oldColWidth) {
         const all_notes = layertwo.find('.note')
         lol(all_notes)
@@ -355,7 +368,7 @@ function getLineGuideStops(skipShape) {
         const texthigh = stage.findOne('.textrec');
         const y = texthigh.getAbsolutePosition().y
         horizontal.push([y + texthigh.height()])
-        lol(vertical)
+        //lol(vertical)
         return {
             vertical: vertical.flat(),
             horizontal: horizontal.flat(),
