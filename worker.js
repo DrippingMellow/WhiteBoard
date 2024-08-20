@@ -2,6 +2,7 @@ globalThis: var i = 0
 globalThis: state = []
 globalThis: a = ""
 globalThis: board = 0
+var d =""
 
 Cache.bind()
 
@@ -12,29 +13,32 @@ function lol(value) {
 //const type = {"note": createNote(), "img_note": createImgNote(), "column": addColumn()}
 
 async function start() {
-	const requestURL = "https://localhost:7064/api/GetTodoItems";
+	const requestURL = "https://localhost:7064/api/GetTodoItem/13";
 	//const request = new Request(requestURL);
+
+	var z = "";
 
 	$.ajax({
 		url: requestURL,
 		crossDomain: true,
-		ContentType: "json",
-		dataType: "json",
+		dataType: 'json',
+        contentType: 'application/json',
 		success: function(data) {
-            lol(data)
-			return(data)
+            lol(data);
+			return(data);
 		},
 		error: function(jqXHR, textStatus, errorThrown) {
 			console.error('Error:', textStatus, errorThrown);
 		}
-	})
+	});
+	
 }
 
 function saveBoardState() {
-    object = stage.toObject()
-	const a = JSON.stringify(object, null, 2)
+    object = stage.toJSON()
+	const a = JSON.parse(object)
 	lol(a)
-	const requestURL = "https://localhost:7064/api/SaveNew";
+	const requestURL = "https://localhost:7064/api/PutTodoItem";
 	b = {
 		"name": "nomnom","description": "this is text","ownerId": 1
 	};
@@ -42,12 +46,12 @@ function saveBoardState() {
 	//const request = new Request(requestURL);
 
 	$.ajax({
-		type: "POST",
+		type: "PUT",
 		url: requestURL,
 		crossDomain: true,
 		dataType: 'json',
         contentType: 'application/json',
-		data: JSON.stringify(b, null, 2),
+		data: JSON.stringify({Json: btoa(object), Id: 13}, null, 2),
 		
 		success: function(data) {
             lol(data)

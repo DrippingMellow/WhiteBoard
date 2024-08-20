@@ -10,26 +10,39 @@
 </head>
 
 <body>
-    <button it="danger" class="btn btn-outline-danger">
-        Danger
-
-    </button>
-
-    <button onclick="addColumn()">Add Column</button>
-    <button onclick="addTask()">Add Task</button>
-    <button onclick="loadkanban()">load me</button>
-    <button onclick="loadkanson()">load too</button>
-
-    <div id="mynumber" data-mynumber="1">Test 1</div>
-    <div data-mynumber="2">Test 2</div>
-    
-    <div>
-      <div class='plusElement btn null' onclick='saveBoardState()' id='addnote-${column.id}'>+</div>
-      <input id="textarea">
-      <input id="color_pick" type="color">
-      <button onclick="notes.tasksToTop()">bring to top</button>
+    <div class="top">
+        <group class="topgoru">
+            <div>
+                <button it="danger" class="btn btn-outline-danger">
+                    Danger
+                </button>
+                <button onclick="addColumn()">Add Column</button>
+                <button onclick="addTask()">Add Task</button>
+                <button onclick="loadkanban()">load me</button>
+                <button onclick="loadkanson()">load too</button>
+            </div>
+            <div>
+                <div id="mynumber" data-mynumber="1">Test 1</div>
+                <div data-mynumber="2">Test 2</div>
+            </div>
+        
+            <div>
+                <div class='plusElement btn null' onclick='saveBoardState()' id='addnote-${column.id}'>+</div>
+                <input id="textarea">
+                <input id="color_pick" type="color">
+                <button onclick="notes.tasksToTop()">bring to top</button>
+            </div>
+        </group>
+        <div class="llll">
+            <div class="NeueTasksGehege">
+                <div class="retzhuj">
+                    <h2>
+                        Tasks
+                    </h2>
+                </div>
+            </div>
+        </div>
     </div>
-    
     <div id="container"></div>
     <div id="menu">
         <div>
