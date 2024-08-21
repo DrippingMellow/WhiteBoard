@@ -1,8 +1,8 @@
-globalThis: var i = 0
-globalThis: state = []
+globalThis: var i = 0 //Iterator for ItemId
+globalThis: state = [] //Tasks 
 globalThis: a = ""
-globalThis: board = 0
-globalThis: d = null
+globalThis: board = 0 
+globalThis: d = null //Used for data transfer
 
 Cache.bind()
 
@@ -10,7 +10,6 @@ function lol(value) {
   console.log(value)
 }
 
-//const type = {"note": createNote(), "img_note": createImgNote(), "column": addColumn()}
 
 async function start() {
 	const requestURL = "https://localhost:7064/api/GetTodoItem/13";
@@ -24,7 +23,8 @@ async function start() {
 		dataType: 'json',
         contentType: 'application/json',
 		success: function(data) {
-			d = JSON.parse(atob(atob(data.json)))
+			var parsedata = JSON.parse(atob(atob(data.json)));
+			d = Object.assign({}, parsedata)
             lol(d);
 			return(data);
 		},

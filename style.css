@@ -2,11 +2,24 @@
 body {
     height: auto;
     background-color: rgb(165, 165, 165);
+    overflow:visible;
+}
+
+
+#scroll-container{
+    border-top-style: solid;
+    overflow: visible;
+    overflow-y: auto;
+    scrollbar-width: auto;
+    overflow-x:visible;
+    display: flex;
+
+    height:75dvh;
 }
 
 #container {
-    width: 90%;
     height: 100vh;
+    scale: 1;
 }
 .top {
     display: flex;
@@ -38,5 +51,5 @@ body {
 .retzhuj {
     position: relative;
     left: 0px;
-    border-bottom-style:;
+    border-bottom-style:solid;
 }

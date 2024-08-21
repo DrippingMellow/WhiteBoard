@@ -1,7 +1,7 @@
 // kanban.js
 const stage = new Konva.Stage({
     container: document.getElementById('container'),
-    width: window.innerWidth,
+    width: document.querySelector("#scroll-container").scrollWidth,
     height: window.innerHeight,
 });
 globalThis: columns = []
@@ -28,6 +28,10 @@ class ColCol {
           let columnName = column.name
           column.start = (index * columnWidth);
           column.end = (column.start + columnWidth - 10)
+          a = 0
+          if (index == columns.length){
+            a = 10
+          }
 
             const column_id = "column" + o;
             o = o + 1;
@@ -36,7 +40,7 @@ class ColCol {
                 name: "column",
                 x: column.start,
                 y: 0,
-                width: columnWidth,
+                width: columnWidth-a,
                 height: stage.height(),
                 draggable: true,
                 
@@ -91,10 +95,11 @@ class ColCol {
         o = 0
         layer.destroyChildren()
         const newColumnIndex = columns.length;
-        columns.push(name);
+        columns.push({name: name});
         columnWidth = stage.width() / columns.length;
         layer.clear();
         this.initColumns();
+        lol(oldColWidth)
         notes.resize_nodes(oldColWidth);
 
         
@@ -106,9 +111,10 @@ class ColCol {
     }
 };
 
-// Function to create a task
+
 
 class Notes {
+    // Function to create a task
     createNote(titletext, text, x, y, color="#fff") {
         const local_state = state
         const note_id = 'note' + i;
@@ -185,6 +191,10 @@ class Notes {
             current.group = taskGroup.x()
             current.cords = positi_on
             lol(index)
+            var newparent = layer.find(node => {
+              return node.getName() === 'column' && node.getAbsolutePosition().x > positi_on.x;
+            })
+            lol(newparent)
             save_state_change([nodeId,positi_on, state[index]])
         });
         taskText.on('click tap', () => {
@@ -337,9 +347,6 @@ function addTask(title=textarea.value, value="no value") {
     notes.createNote(title, value, 10, 400, color_pick);
 }
 
-
-
-// Example tasks
 
 
 
