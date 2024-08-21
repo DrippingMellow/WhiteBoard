@@ -5,7 +5,6 @@ const stage = new Konva.Stage({
     height: window.innerHeight,
 });
 globalThis: columns = []
-globalThis: var o = 0
 const layer = new Konva.Layer();
 const layertwo = new Konva.Layer();
 const layerguide = new Konva.Layer();
@@ -16,62 +15,66 @@ stage.add(layerguide)
 stage.on('')
 // if (d == null){
   
-  //columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
+  columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
 //}
 var columnWidth
 
-
+/**
+ * Responsible for managing the Columns
+ * 
+ * @method ColCol.initColumns() - Creates objects for every Column in: "@const {columns}".
+ * 
+ * @method ColCol.createNewColumn(name) - Adds a new Column to {@const {columns}}.
+ * @param {string} name - Name of new Column
+ */
 class ColCol {
     initColumns() {
-        //columnWidth = stage.width() / columns.length;
         columns.forEach((column, index) => {
-          let columnName = column.name
-          column.start = (index * columnWidth);
-          column.end = (column.start + columnWidth - 10)
-          a = 0
-          if (index == columns.length){
-            a = 10
-          }
-
-            const column_id = "column" + o;
-            o = o + 1;
-            const group = new Konva.Group({
-                id: column_id,
-                name: "column",
-                x: column.start,
-                y: 0,
-                width: columnWidth-a,
-                height: stage.height(),
-                draggable: true,
-                
-            });
-        
-            const rect = new Konva.Rect({
-                width: columnWidth - 10,
-                height: stage.height() - 10,
-                fill: '#dddddda6',
-                stroke: '#000',
-                strokeWidth: 2,
-                cornerRadius: 10,
-            });
-        
-            const text = new Konva.Text({
-                text: columnName,
-                fontSize: 24,
-                fontFamily: 'Calibri',
-                fill: '#000',
-                padding: 10,
-                align: 'center',
-            });
-
-            const textrec = new Konva.Rect({
-                width: columnWidth - 10,
-                height: text.height(),
-                fill: "#fcd",
-                cornerRadius:([10, 10, 0, 0]),
-                name: 'textrec'
-            })
+            let columnName = column.name
+            column.start = (index * columnWidth);
+            column.end = (column.start + columnWidth - 10)
+            let space = 0
+            if (index != columns.length){
+              space = 10
+            }
+                const column_id = "column" + o;
+                o = o + 1;
+                const group = new Konva.Group({
+                    id: column_id,
+                    name: "column",
+                    x: column.start,
+                    y: 0,
+                    width: columnWidth,
+                    height: stage.height(),
+                    draggable: true,
+                });
             
+                const rect = new Konva.Rect({
+                    width: columnWidth - space,
+                    height: stage.height(),
+                    fill: '#dddddda6',
+                    stroke: '#000',
+                    strokeWidth: 2,
+                    cornerRadius: 10,
+                });
+            
+                const text = new Konva.Text({
+                    text: columnName,
+                    fontSize: 24,
+                    fontFamily: 'Calibri',
+                    fill: '#000',
+                    padding: 10,
+                    align: 'center',
+                });
+
+                const textrec = new Konva.Rect({
+                    width: columnWidth - space,
+                    height: text.height(),
+                    fill: "#fcd",
+                    cornerRadius:([10, 10, 0, 0]),
+                    name: 'textrec'
+                })
+              
             group.add(textrec);
             group.add(rect);
             group.add(text);
@@ -79,7 +82,7 @@ class ColCol {
             layer.add(group);
             text.on('click', function(){
                 text.setText(textarea.value)
-                rect.fill(color_pick.value)
+                rect.fill(color_pick.value+"a6")
             })
         });
         layer.draw()
@@ -101,8 +104,6 @@ class ColCol {
         this.initColumns();
         lol(oldColWidth)
         notes.resize_nodes(oldColWidth);
-
-        
     };
 
     resetColumnPos() {
@@ -113,9 +114,17 @@ class ColCol {
 
 
 
-class Notes {
+class Note {
+  constructor(title, text, x, y){
+    this.title = title;
+    this.text = text;
+    this.x = x;
+    this.y = y;
+    this.attachedToColumn = null;
+    this.hoverTimer = null;
+  }
     // Function to create a task
-    createNote(titletext, text, x, y, color="#fff") {
+    createNote(title, text, x, y, color="#fff") {
         const local_state = state
         const note_id = 'note' + i;
         i = i + 1; 
@@ -139,7 +148,7 @@ class Notes {
         });
 
         const taskTitle = new Konva.Text({
-            text: titletext,
+            text: title,
             fontSize: 20,
             padding: 2,
             height: 20,
@@ -162,7 +171,7 @@ class Notes {
         layertwo.add(taskGroup);
         layertwo.draw();
 
-        state.push({id:note_id, objectData: {group: taskGroup.x(), title: titletext, text: text, cords:[x, y],  color: color}})
+        state.push({id:note_id, objectData: {group: taskGroup.x(), title: title, text: text, cords:[x, y],  color: color}})
 
         taskGroup.on('mouseover', function () {
             document.body.style.cursor = 'pointer';
@@ -274,7 +283,86 @@ class Notes {
                 }
             });
         });
+
+        taskGroup.on('dragmove', () => {
+          this.checkAttachment(taskGroup);
+        });
+    
+        // Add hover functionality
+        taskGroup.on('mouseenter', () => {
+          this.startHoverTimer(taskGroup);
+        });
+    
+        taskGroup.on('mouseleave', () => {
+          this.clearHoverTimer();
+        });
     };
+
+    startHoverTimer(taskGroup) {
+      this.clearHoverTimer();
+      this.hoverTimer = setTimeout(() => {
+        this.attachToNearestColumn(taskGroup);
+      }, 5000); // Hover for 1 second before attaching
+    }
+  
+    clearHoverTimer() {
+      if (this.hoverTimer) {
+        clearTimeout(this.hoverTimer);
+        this.hoverTimer = null;
+      }
+    }
+  
+    attachToNearestColumn(taskGroup) {
+      const columns = layer.find('.column');
+      let nearestColumn = null;
+      let minDistance = Infinity;
+      const maxDistance = 50; // Maximum distance for attachment
+  
+      columns.forEach((column) => {
+        if (Konva.Util.haveIntersection(taskGroup.getClientRect(), column.getClientRect())) {
+          nearestColumn = column;
+          lol(nearestColumn)
+          return false; // Break the loop if we find an intersecting column
+        }
+      });
+  
+      if (nearestColumn.x) {
+        this.attachToColumn(taskGroup, nearestColumn);
+      }
+    }
+  
+    attachToColumn(taskGroup, column) {
+      this.attachedToColumn = column.name;
+      taskGroup.moveTo(column)
+      taskGroup.position({
+        x: taskGroup.x() - column.x(),
+        y: taskGroup.y()
+      });
+      layer.draw();
+    }
+  
+    detachFromColumn(taskGroup) {
+      if (this.attachedToColumn) {
+        taskGroup.moveTo(layertwo);
+        this.attachedToColumn = null;
+        layer.draw();
+        layertwo.draw();
+      }
+    }
+  
+    checkAttachment(taskGroup) {
+      if (this.attachedToColumn) {
+        const columnRect = this.attachedToColumn.getClientRect();
+        const taskRect = taskGroup.getClientRect();
+  
+        if (
+          taskRect.x < columnRect.x ||
+          taskRect.x + taskRect.width > columnRect.x + columnRect.width
+        ) {
+          this.detachFromColumn(taskGroup);
+        }
+      }
+    }
 
     /// TODO: Position Change correction, as adding columns brings the tasks to wrong positions. ///
     resize_nodes(oldColWidth) {
@@ -337,7 +425,7 @@ class Notes {
 }
 
 const colcol = new ColCol();
-const notes = new Notes()
+const notes = new Note()
 
 function addColumn(value = textarea.value) {
     colcol.createNewColumn(value)
@@ -346,8 +434,6 @@ function addColumn(value = textarea.value) {
 function addTask(title=textarea.value, value="no value") {
     notes.createNote(title, value, 10, 400, color_pick);
 }
-
-
 
 
 // were can we snap our objects?
