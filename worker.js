@@ -46,6 +46,45 @@ async function start() {
 }
 
 /**
+ * Loads tickets, to show them above the kanban, for the user to see and add.
+ */
+function getTickets() {
+	var requestURL = UrlAdress + "/api/GetTickets/";
+	$.ajax({
+		url: requestURL,
+		crossDomain: true,
+		dataType: 'json',
+		contentType: 'application/json',
+		success: function (data) {
+			lol(data)
+			return (data);
+		}
+	})
+}
+function displayTickets() {
+    const tasksContainer = document.querySelector('#tasks')
+    const ticketsContainer = document.querySelector('.NeueTasksGehege')
+    
+    if (tasksContainer && ticketsContainer) {
+        getTickets().then(tickets => {
+            tasksContainer.innerHTML = ''
+            tickets.forEach(ticket => {
+                const ticketElement = document.createElement('div')
+                ticketElement.classList.add('ticket')
+                ticketElement.textContent = ticket.title
+                tasksContainer.appendChild(ticketElement)
+            })
+            ticketsContainer.appendChild(tasksContainer)
+        }).catch(error => {
+            console.error('Error fetching tickets:', error)
+        })
+    } else {
+        console.error('Container elements not found')
+    }
+}
+
+
+/**
  * Send the board to save
  * 
  * @param {JSON} boarditems - Is a with 64 decoded JSon.
@@ -146,39 +185,44 @@ function loadkanban() {
 	//colcol.initColumns()
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-	var menuNode = document.getElementById('menu');
-	menuNode.style.display = 'none'
-	document.getElementById('delete-button').addEventListener('click', () => {
-		var parent = currentShape.getParent();
-		parent.destroy();
-	});
-
-	//hides menue after clicking "somewhere"
-	window.addEventListener('click', () => {
-		// hide menu
-		lol("lol")
+document.addEventListener("DOMContentLoaded", async () => {
+	try {
+		await displayTickets();
+		var menuNode = document.getElementById('menu');
 		menuNode.style.display = 'none';
-	});
-	// setup menu
-	let currentShape;
+		document.getElementById('delete-button').addEventListener('click', () => {
+			var parent = currentShape.getParent();
+			parent.destroy();
+		});
 
-	stage.on('contextmenu', function showDeleteButton(e) {
-		// prevent default behavior
-		e.evt.preventDefault();
-		if (e.target === stage) {
-			// if we are on empty place of the stage we will do nothing
-			return;
-		}
-		currentShape = e.target;
+		//hides menue after clicking "somewhere"
+		window.addEventListener('click', () => {
+			// hide menu
+			lol("lol");
+			menuNode.style.display = 'none';
+		});
+		// setup menu
+		let currentShape;
 
-		// show menu
-		menuNode.style.position = 'absolute'
-		menuNode.style.display = 'initial';
-		var containerRect = stage.container().getBoundingClientRect();
-		menuNode.style.top =
-			containerRect.top + stage.getPointerPosition().y + 4 + 'px';
-		menuNode.style.left =
-			containerRect.left + stage.getPointerPosition().x + 4 + 'px';
-	});
-})
+		stage.on('contextmenu', function showDeleteButton(e) {
+			// prevent default behavior
+			e.evt.preventDefault();
+			if (e.target === stage) {
+				// if we are on empty place of the stage we will do nothing
+				return;
+			}
+			currentShape = e.target;
+
+			// show menu
+			menuNode.style.position = 'absolute';
+			menuNode.style.display = 'initial';
+			var containerRect = stage.container().getBoundingClientRect();
+			menuNode.style.top =
+				containerRect.top + stage.getPointerPosition().y + 4 + 'px';
+			menuNode.style.left =
+				containerRect.left + stage.getPointerPosition().x + 4 + 'px';
+		});
+	} catch (error) {
+		console.error("An error occurred:", error);
+	}
+});

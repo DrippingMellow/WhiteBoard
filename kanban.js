@@ -397,6 +397,7 @@ class Note {
         layertwo.draw()
     };
 
+    /// FIXME: When task is attached to a column it has a problem with x. ///:
     tasksToTop() {
       var r = 44
       var current_group = ([])
