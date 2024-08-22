@@ -124,7 +124,7 @@ class Note {
     this.hoverTimer = null;
   }
     // Function to create a task
-    createNote(title, text, x, y, color="#fff") {
+    createNote(title, text="no value", x, y, color="#fff") {
         const local_state = state
         const note_id = 'note' + i;
         i = i + 1; 

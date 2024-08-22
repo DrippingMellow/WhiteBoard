@@ -113,7 +113,43 @@ body {
         overflow: hidden;
     }
 }
-
+.NeueTasksGehege{
+    max-width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: auto;
+    cursor: pointer;
+    resize: both;
+}
+#tasks{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    max-width: 100%;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: auto;
+    cursor: pointer;
+}
+.ticket-container {
+    display: flex;
+    flex-flow: row wrap;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: rgb(255, 255, 255);
+    border-width: 2px;
+    background-color: rgb(255, 255, 255);
+    width: fit-content();
+    max-width: 100%;
+    max-height: 100%;
+    resize: none;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: auto;
+}
 .retzhuj {
     position: relative;
     left: 0px;
