@@ -107,8 +107,19 @@ function loadkanban() {
 	columns = []
 	columnWidth = stage.width() / d.columns.length
 
+	columns = d.columns.map((column, index) => {
+		return {
+			name: column.name,
+			start: (index * columnWidth),
+			end: (column.start + columnWidth - 10),
+			nodes: []
+		}
+	})
+	colcol.initColumns()
+
 	d.columns.forEach((column, index) => {
-		colom = colcol.createNewColumn(column.name)
+		//colom = colcol.createNewColumn(column.name)
+		
 		//columns.push({ name: column.name })
 		lol(column)
 		column.nodes.forEach((node) => {
@@ -118,11 +129,13 @@ function loadkanban() {
             const x = obj.cords.xPercent * stage.width();
             const y = obj.cords.yPercent * stage.height();
             const note = notes.createNote(obj.title, obj.text, x, y, obj.color);
-			columnGroup = stage.findOne('#column' + index);
+			console.log('note:', note);
+      		columnGroup = stage.findOne('#column' + index);
+      		console.log('columnGroup:', columnGroup);
 			note.moveTo(columnGroup);
 			note.position({
-                x: obj.cords.x - columnGroup.x(),
-                y: obj.cords.y
+                x: x - columnGroup.x(),
+                y: y,
             });
             // if (obj.attachedToColumn) {
             //     const attachedColumn = columns.find(col => col.name === obj.attachedToColumn);

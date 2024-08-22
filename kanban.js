@@ -296,6 +296,7 @@ class Note {
         taskGroup.on('mouseleave', () => {
           this.clearHoverTimer();
         });
+        return taskGroup;
     };
 
     startHoverTimer(taskGroup) {
@@ -332,6 +333,7 @@ class Note {
     }
   
     attachToColumn(taskGroup, column) {
+      lol(taskGroup + " " + column)
       this.attachedToColumn = column.name;
       taskGroup.moveTo(column)
       taskGroup.position({
@@ -427,11 +429,11 @@ class Note {
 const colcol = new ColCol();
 const notes = new Note()
 
-function addColumn(value = textarea.value) {
+function addColumn(value = textarea.value, color_pick = document.querySelector('#color_pick').value) {
     colcol.createNewColumn(value)
 }
 
-function addTask(title=textarea.value, value="no value") {
+function addTask(title=textarea.value, value="no value", color_pick = document.querySelector('#color_pick').value) {
     notes.createNote(title, value, 10, 400, color_pick);
 }
 
