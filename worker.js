@@ -70,7 +70,10 @@ async function sendBoard(boarditems, requestURL) {
 }
 
 function saveBoardState() {
-	columns.forEach((column) => {
+	columns.forEach((column, index) => {
+		const columnNode = layer.findOne('#column' + index);
+        column.x = columnNode.x();
+        column.y = columnNode.y();
 		const nodes = new Array;
 		state.forEach((node, index) => {
 			if (column.start < node.objectData.group && node.objectData.group < column.end) {
@@ -78,7 +81,8 @@ function saveBoardState() {
                 const xPercent = node.objectData.cords.x / stage.width();
                 const yPercent = node.objectData.cords.y / stage.height();
                 node.objectData.cords = { xPercent, yPercent };
-                node.objectData.attachedToColumn = node.attachedToColumn ? column.name : null;
+                node.objectData.attachedToColumn = node.attachedToColumn? column : "column1";
+				lol(node.objectData.attachedToColumn)
                 nodes.push(node);
 			}
 		});
@@ -103,8 +107,9 @@ function loadkanban() {
 	columns = []
 	columnWidth = stage.width() / d.columns.length
 
-	d.columns.forEach((column) => {
-		columns.push({ name: column.name })
+	d.columns.forEach((column, index) => {
+		colom = colcol.createNewColumn(column.name)
+		//columns.push({ name: column.name })
 		lol(column)
 		column.nodes.forEach((node) => {
 			obj = node.objectData
@@ -113,15 +118,19 @@ function loadkanban() {
             const x = obj.cords.xPercent * stage.width();
             const y = obj.cords.yPercent * stage.height();
             const note = notes.createNote(obj.title, obj.text, x, y, obj.color);
-            if (obj.attachedToColumn) {
-                const attachedColumn = columns.find(col => col.name === obj.attachedToColumn);
-                if (attachedColumn) {
-                    note.attachToColumn(note.taskGroup, attachedColumn);
-                }
-            }
+			columnGroup = stage.findOne('#column' + index);
+			note.moveTo(columnGroup);
+			note.position({
+                x: obj.cords.x - columnGroup.x(),
+                y: obj.cords.y
+            });
+            // if (obj.attachedToColumn) {
+            //     const attachedColumn = columns.find(col => col.name === obj.attachedToColumn);
+            //         notes.attachToColumn(note.taskGroup, attachedColumn);
+            //}
 		})
 	});
-	colcol.initColumns()
+	//colcol.initColumns()
 }
 
 document.addEventListener("DOMContentLoaded", () => {
