@@ -1,23 +1,9 @@
-import { UrlAdress, lol } from "./worker";
+import { UrlAdress, lol } from "./worker.js";
 
 /**
  * Loads tickets, to show them above the kanban, for the user to see and add.
  */
-/**
- * Fetches a list of tickets from the server and displays them in the UI.
- *
- * This function makes an AJAX request to the server to retrieve a list of tickets,
- * and then creates HTML elements to display each ticket in the UI. The tickets
- * are displayed in a container element with the ID 'tasks', and a button is
- * added to each ticket that allows the user to create a new note with the
- * ticket's name.
- *
- * @returns {Promise<void>} A Promise that resolves when the tickets have been
- * displayed in the UI.
- */
-export function displayTickets() {
-	// ...
-}
+
 async function getTickets() {
 	var requestURL = UrlAdress + "/api/GetTickets/";
 	return new Promise((resolve, reject) => {
@@ -36,6 +22,19 @@ async function getTickets() {
 		});
 	});
 }
+
+/**
+ * Fetches a list of tickets from the server and displays them in the UI.
+ *
+ * This function makes an AJAX request to the server to retrieve a list of tickets,
+ * and then creates HTML elements to display each ticket in the UI. The tickets
+ * are displayed in a container element with the ID 'tasks', and a button is
+ * added to each ticket that allows the user to create a new note with the
+ * ticket's name.
+ *
+ * @returns {Promise<void>} A Promise that resolves when the tickets have been
+ * displayed in the UI.
+ */
 export function displayTickets() {
 	const tasksContainer = document.querySelector('#tasks');
 	const ticketsContainer = document.querySelector('.NeueTasksGehege');

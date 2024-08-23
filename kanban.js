@@ -685,5 +685,3 @@ function getLineGuideStops(skipShape) {
     // clear all previous lines on the screen
     layer.find('.guid-line').forEach((l) => l.destroy());
   });
-
-start()

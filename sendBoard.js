@@ -1,4 +1,4 @@
-import { lol, UrlAdress } from "./worker";
+import { lol, UrlAdress } from "./worker.js";
 
 /**
  * Send the board to save

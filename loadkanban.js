@@ -1,4 +1,4 @@
-import { lol } from "./worker";
+import { lol } from "./worker.js";
 
 export function loadkanban() {
 	columns = [];

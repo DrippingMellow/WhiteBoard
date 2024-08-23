@@ -1,5 +1,5 @@
-import { loadkanban } from "./loadkanban";
-import { UrlAdress, lol } from "./worker";
+import { loadkanban } from "./loadkanban.js";
+import { UrlAdress, lol } from "./worker.js";
 
 /**
  * starts everything up after loading
@@ -10,7 +10,7 @@ import { UrlAdress, lol } from "./worker";
  * @event done - Loads the board when done.
  */
 
-async function start() {
+export async function start() {
 	const requestURL = UrlAdress + "/api/GetTodoItem/" + requestId;
 
 	$.ajax({
