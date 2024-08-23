@@ -4,13 +4,13 @@ const stage = new Konva.Stage({
     width: document.querySelector("#scroll-container").scrollWidth,
     height: window.innerHeight,
 });
-globalThis: columns = []
-const layer = new Konva.Layer();
-const layertwo = new Konva.Layer();
+globalThis.columns = []
+const ColumnLayer = new Konva.Layer();
+const NotesLayer = new Konva.Layer();
 const layerguide = new Konva.Layer();
 const state = []
-stage.add(layer);
-stage.add(layertwo);
+stage.add(ColumnLayer);
+stage.add(NotesLayer);
 stage.add(layerguide)
 stage.on('')
 // if (d == null){
@@ -79,13 +79,13 @@ class ColCol {
             group.add(rect);
             group.add(text);
             
-            layer.add(group);
+            ColumnLayer.add(group);
             text.on('click', function(){
                 text.setText(textarea.value)
                 rect.fill(color_pick.value+"a6")
             })
         });
-        layer.draw()
+        ColumnLayer.draw()
     };
 
     createNewColumn(name) {
@@ -96,18 +96,18 @@ class ColCol {
         var oldColWidth = 0
         oldColWidth = columnWidth
         o = 0
-        layer.destroyChildren()
+        ColumnLayer.destroyChildren()
         const newColumnIndex = columns.length;
         columns.push({name: name});
         columnWidth = stage.width() / columns.length;
-        layer.clear();
+        ColumnLayer.clear();
         this.initColumns();
         lol(oldColWidth)
         notes.resize_nodes(oldColWidth);
     };
 
     resetColumnPos() {
-        layer.destroyChildren()
+        ColumnLayer.destroyChildren()
         this.initColumns()
     }
 };
@@ -168,8 +168,8 @@ class Note {
         taskGroup.add(taskRect);
         taskGroup.add(taskTitle)
         taskGroup.add(taskText);
-        layertwo.add(taskGroup);
-        layertwo.draw();
+        NotesLayer.add(taskGroup);
+        NotesLayer.draw();
 
         state.push({id:note_id, objectData: {group: taskGroup.x(), title: title, text: text, cords:[x, y],  color: color}})
 
@@ -185,8 +185,8 @@ class Note {
             lol(textNode)
         });
         taskGroup.on('dragend', function(){
-            const positi_on = taskGroup.getAbsolutePosition();
             const nodeId = taskGroup.id();
+            const positi_on = taskGroup.getAbsolutePosition();
             let index = 0
             for (let iterator = 0; iterator < state.length; iterator++) {
               const element = state[iterator];
@@ -200,31 +200,17 @@ class Note {
             current.group = taskGroup.x()
             current.cords = positi_on
             lol(index)
-            var newparent = layer.find(node => {
+            var newparent = ColumnLayer.find(node => {
               return node.getName() === 'column' && node.getAbsolutePosition().x > positi_on.x;
             })
             lol(newparent)
             save_state_change([nodeId,positi_on, state[index]])
         });
         taskText.on('click tap', () => {
-            var local_parent = taskGroup.id();
-            var textpos = taskText.getRelativePosition();
-            lol(textpos)
+            var local_parent = taskGroup;
             var stageBox = stage.container().getBoundingClientRect();
-            var areapos = {
-                x: stageBox.left + textpos.x,
-                y: stageBox.top + textpos.y,
-            };
-            var textarea = document.createElement('textarea');
-            document.body.appendChild(textarea);
-            textarea.value = taskText.text()
-
-            textarea.style.position = 'absolute';
-            textarea.style.top = areapos.y + 'px';
-            textarea.style.left = areapos.x + 'px';
-            textarea.style.width = (taskRect.width()-10) + 'px';
-            textarea.style.height = (taskRect.height()-22) + 'px';
-            lol(areapos)
+            const type = 'description';
+            TaskTextEditor(local_parent, taskText, stageBox, type, taskRect);
 
             textarea.focus();
             textarea.addEventListener('keydown', function (e) {
@@ -249,39 +235,9 @@ class Note {
             });
         });
         taskTitle.on('click tap', () => {
-            var local_parent = taskGroup.id();
-            var textpos = taskTitle.getAbsolutePosition();
+            var local_parent = taskGroup;
             var stageBox = stage.container().getBoundingClientRect();
-            var areapos = {
-                x: stageBox.left + textpos.x,
-                y: stageBox.top + textpos.y,
-            };
-            var textarea = document.createElement('input');
-            document.body.appendChild(textarea);
-            textarea.value = taskTitle.text()
-
-            textarea.style.position = 'absolute';
-            textarea.style.top = areapos.y + 'px';
-            textarea.style.left = areapos.x + 'px';
-            textarea.style.width = taskRect.width() + 'px';
-            textarea.style.height = 22 + 'px';
-            lol(areapos)
-
-            textarea.focus();
-            textarea.addEventListener('keydown', function (e) {
-                // hide on enter
-                lol(e.key)
-                if (e.key === "Enter") {
-                    taskTitle.width(taskRect.width());
-                    taskTitle.wrap('char')
-                taskTitle.text(textarea.value);
-                document.body.removeChild(textarea);
-                save_state_change([local_parent,taskTitle.text()])
-                }
-                if (e.key === "Escape") {
-                    document.body.removeChild(textarea)
-                }
-            });
+            TaskTextEditor(local_parent, taskTitle,stageBox, 'title', taskRect);
         });
 
         taskGroup.on('dragmove', () => {
@@ -299,6 +255,7 @@ class Note {
         return taskGroup;
     };
 
+    /// TODO: Column should change the color, when the task is dragged over it, to show that it is about to be attached ///
     startHoverTimer(taskGroup) {
       this.clearHoverTimer();
       this.hoverTimer = setTimeout(() => {
@@ -314,7 +271,7 @@ class Note {
     }
   
     attachToNearestColumn(taskGroup) {
-      const columns = layer.find('.column');
+      const columns = ColumnLayer.find('.column');
       let nearestColumn = null;
       let minDistance = Infinity;
       const maxDistance = 50; // Maximum distance for attachment
@@ -340,15 +297,15 @@ class Note {
         x: taskGroup.x() - column.x(),
         y: taskGroup.y()
       });
-      layer.draw();
+      ColumnLayer.draw();
     }
   
     detachFromColumn(taskGroup) {
       if (this.attachedToColumn) {
-        taskGroup.moveTo(layertwo);
+        taskGroup.moveTo(NotesLayer);
         this.attachedToColumn = null;
-        layer.draw();
-        layertwo.draw();
+        ColumnLayer.draw();
+        NotesLayer.draw();
       }
     }
   
@@ -368,7 +325,7 @@ class Note {
 
     /// TODO: Position Change correction, as adding columns brings the tasks to wrong positions. ///
     resize_nodes(oldColWidth) {
-        const all_notes = layertwo.find('.note')
+        const all_notes = NotesLayer.find('.note')
         lol(all_notes)
 
         all_notes.forEach((item) => {
@@ -394,7 +351,7 @@ class Note {
                 rect.height(250)
             }
         })
-        layertwo.draw()
+        NotesLayer.draw()
     };
 
     /// FIXME: When task is attached to a column it has a problem with x. ///:
@@ -585,7 +542,7 @@ function getLineGuideStops(skipShape) {
           name: 'guid-line',
           dash: [4, 6],
         });
-        layer.add(line);
+        ColumnLayer.add(line);
         line.absolutePosition({
           x: 0,
           y: lg.lineGuide,
@@ -598,7 +555,7 @@ function getLineGuideStops(skipShape) {
           name: 'guid-line',
           dash: [4, 6],
         });
-        layer.add(line);
+        ColumnLayer.add(line);
         line.absolutePosition({
           x: lg.lineGuide,
           y: 0,
@@ -607,10 +564,10 @@ function getLineGuideStops(skipShape) {
     });
   }
 
-  layer.on('dragmove', function (e) {
+  ColumnLayer.on('dragmove', function (e) {
     // clear all previous lines on the screen
-    layer.find('.guid-line').forEach((l) => l.destroy());
-    layertwo.find('.guid-line').forEach((l) => l.destroy());
+    ColumnLayer.find('.guid-line').forEach((l) => l.destroy());
+    NotesLayer.find('.guid-line').forEach((l) => l.destroy());
 
     // find possible snapping lines
     var lineGuideStops = getLineGuideStops(e.target);
@@ -644,10 +601,10 @@ function getLineGuideStops(skipShape) {
     e.target.absolutePosition(absPos);
   });
 
-  layertwo.on('dragmove', function (e) {
+  NotesLayer.on('dragmove', function (e) {
     // clear all previous lines on the screen
-    layertwo.find('.guid-line').forEach((l) => l.destroy());
-    layer.find('.guid-line').forEach((l) => l.destroy());
+    NotesLayer.find('.guid-line').forEach((l) => l.destroy());
+    ColumnLayer.find('.guid-line').forEach((l) => l.destroy());
 
     // find possible snapping lines
     var lineGuideStops = getLineGuideStops(e.target);
@@ -681,7 +638,7 @@ function getLineGuideStops(skipShape) {
     e.target.absolutePosition(absPos);
   });
 
-  layertwo.on('dragend', function (e) {
+  NotesLayer.on('dragend', function (e) {
     // clear all previous lines on the screen
-    layer.find('.guid-line').forEach((l) => l.destroy());
+    ColumnLayer.find('.guid-line').forEach((l) => l.destroy());
   });

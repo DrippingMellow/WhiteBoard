@@ -1,12 +1,19 @@
-import { displayTickets } from "./displayTickets.js"
-import { start } from "./start.js"
+import { displayTickets } from "./functions/displayTickets.js"
+import { start } from "./functions/start.js"
 
-var i = 0 //Iterator for ItemID
-var o = 0 //iterator for ColumnID
-globalThis: state = [] //Tasks 
-globalThis: requestId = 13 //ID for request
-globalThis: board = 0
-globalThis: d = null //Used for data transfer
+export let i = 0 //Iterator for ItemID
+globalThis.i = 0
+let o = 0 //iterator for ColumnID
+globalThis.o = 0
+//Reserved for Future Use
+//var n = 0 //iterator for NoteID 
+let state = []
+globalThis: state  //Tasks 
+export const requestId = 13 //ID for request
+globalThis: requestId;
+const board = 0
+globalThis: board
+
 /**
  * @constant {string} UrlAdress - Is the [Domain / Url] on which the API [is running on / can be spocken to].
  */
@@ -14,6 +21,9 @@ export const UrlAdress = "https://localhost:7064" //Enter your Domain here
 
 Cache.bind()
 
+globalThis.lol = function lol(value) {
+	console.log(value)
+}
 export function lol(value) {
 	console.log(value)
 }

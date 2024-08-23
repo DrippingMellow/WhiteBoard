@@ -1,4 +1,4 @@
-import { UrlAdress, lol } from "./worker.js";
+import { UrlAdress, lol } from "../worker.js";
 
 /**
  * Loads tickets, to show them above the kanban, for the user to see and add.

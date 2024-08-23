@@ -1,5 +1,8 @@
 import { loadkanban } from "./loadkanban.js";
-import { UrlAdress, lol } from "./worker.js";
+import { UrlAdress, lol, requestId} from "../worker.js";
+
+let d = null //Used for data transfer
+globalThis: d;
 
 /**
  * starts everything up after loading
@@ -28,6 +31,6 @@ export async function start() {
 			console.error('Error:', textStatus, errorThrown);
 		}
 	}).done(function () {
-		loadkanban();
+		loadkanban(d);
 	});
 }
