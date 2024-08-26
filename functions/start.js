@@ -1,5 +1,4 @@
-import { loadkanban } from "./loadkanban.js";
-import { UrlAdress, lol, requestId} from "../worker.js";
+
 
 let d = null //Used for data transfer
 globalThis: d;
@@ -13,8 +12,8 @@ globalThis: d;
  * @event done - Loads the board when done.
  */
 
-export async function start() {
-	const requestURL = UrlAdress + "/api/GetTodoItem/" + requestId;
+async function start() {
+	const requestURL = UrlAdress + "/api/GetKanban/" + requestId;
 
 	$.ajax({
 		url: requestURL,

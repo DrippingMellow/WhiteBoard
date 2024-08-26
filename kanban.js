@@ -8,7 +8,7 @@ globalThis.columns = []
 const ColumnLayer = new Konva.Layer();
 const NotesLayer = new Konva.Layer();
 const layerguide = new Konva.Layer();
-const state = []
+//const state = []
 stage.add(ColumnLayer);
 stage.add(NotesLayer);
 stage.add(layerguide)
@@ -124,7 +124,7 @@ class Note {
     this.hoverTimer = null;
   }
     // Function to create a task
-    createNote(title, text="no value", x, y, color="#fff") {
+    createNote(title, text="no value", x, y, color="#fff", attachedToColumn=false) {
         const local_state = state
         const note_id = 'note' + i;
         i = i + 1; 
@@ -166,12 +166,12 @@ class Note {
         });
 
         taskGroup.add(taskRect);
-        taskGroup.add(taskTitle)
+        taskGroup.add(taskTitle);
         taskGroup.add(taskText);
         NotesLayer.add(taskGroup);
         NotesLayer.draw();
 
-        state.push({id:note_id, objectData: {group: taskGroup.x(), title: title, text: text, cords:[x, y],  color: color}})
+        state.push({id:note_id, objectData: {title: title, text: text, cords:[x, y],  color: color, attachedToColumn: attachedToColumn}})
 
         taskGroup.on('mouseover', function () {
             document.body.style.cursor = 'pointer';
@@ -200,11 +200,12 @@ class Note {
             current.group = taskGroup.x()
             current.cords = positi_on
             lol(index)
-            var newparent = ColumnLayer.find(node => {
-              return node.getName() === 'column' && node.getAbsolutePosition().x > positi_on.x;
-            })
-            lol(newparent)
-            save_state_change([nodeId,positi_on, state[index]])
+            try{
+              globalThis.save_state_change([nodeId,positi_on, state[index]], "position")
+            }
+            catch{
+              console.log("error")
+            }
         });
         taskText.on('click tap', () => {
             var local_parent = taskGroup;
@@ -227,7 +228,7 @@ class Note {
                     taskText.height(230)
                     taskRect.height(taskText.height()+22)
                 }
-                save_state_change([local_parent,taskText.text(),taskRect.height()])
+                save_state_change([local_parent,taskText.text(),taskRect.height()], "text")
                 }
                 if (e.key === "Escape") {
                     document.body.removeChild(textarea)
@@ -260,7 +261,7 @@ class Note {
       this.clearHoverTimer();
       this.hoverTimer = setTimeout(() => {
         this.attachToNearestColumn(taskGroup);
-      }, 5000); // Hover for 1 second before attaching
+      }, 2500); // Hover for 1 second before attaching
     }
   
     clearHoverTimer() {
@@ -280,7 +281,7 @@ class Note {
         if (Konva.Util.haveIntersection(taskGroup.getClientRect(), column.getClientRect())) {
           nearestColumn = column;
           lol(nearestColumn)
-          return false; // Break the loop if we find an intersecting column
+          return ; // Break the loop if we find an intersecting column
         }
       });
   
@@ -292,6 +293,9 @@ class Note {
     attachToColumn(taskGroup, column) {
       lol(taskGroup + " " + column)
       this.attachedToColumn = column.name;
+      state.find(id => id  = element => {
+        element.objectData.attachedToColumn = column.name;
+      });
       taskGroup.moveTo(column)
       taskGroup.position({
         x: taskGroup.x() - column.x(),
@@ -311,9 +315,9 @@ class Note {
   
     checkAttachment(taskGroup) {
       if (this.attachedToColumn) {
-        const columnRect = this.attachedToColumn.getClientRect();
+        const columnRect = taskGroup.getClientRect();
         const taskRect = taskGroup.getClientRect();
-  
+
         if (
           taskRect.x < columnRect.x ||
           taskRect.x + taskRect.width > columnRect.x + columnRect.width
@@ -380,6 +384,11 @@ class Note {
         }
           
       })
+    };
+    taskdelete(element) {
+      state.filter(function(element) {
+        return element.id != this.id;
+      }, this);
     }
 
 }

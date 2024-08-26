@@ -18,62 +18,70 @@ function TaskTextEditor(parent, textbox, stageBox, type, taskRect) {
         case "title":
             textelement = 'input';
 
-            edit(parent, textelement, stageBox, textbox, 0, taskRect);
+            createTextEditor(parent, textelement, stageBox, textbox, type, 0, taskRect);
             break;
         case "description":
             textelement = 'textarea';
-            edit(parent, textelement, stageBox, textbox, 10, taskRect);
+            createTextEditor(parent, textelement, stageBox, textbox, type, 10, taskRect);
             break;
 
     }
 }
 
-function edit(parent, txtelement, stageBox, textbox, a = 0, b = 0) {
-    let titleheight = 22;
-    let textpos = parent.getAbsolutePosition();
-    var areapos = {
-        x: stageBox.left + textpos.x,
-        y: stageBox.top + textpos.y,
+function createTextEditor(parent, b , stageBox, textBox, type, a = 0 , taskRect) {
+    const textElement = type === 'title' ? 'input' : 'textarea';
+    const textEditor = document.createElement(b);
+
+    const position = parent.getAbsolutePosition();
+    const areaPosition = {
+        x: stageBox.left + position.x,
+        y: stageBox.top + position.y,
     };
-    var textarea = document.createElement(txtelement);
-    Object.assign(textarea, {
+
+    Object.assign(textEditor, {
         setPosition(x, y) {
             this.style.position = 'absolute';
             this.style.left = x + 'px';
             this.style.top = y + 'px';
             return this;
         },
+
         setWidth(width) {
             this.style.width = width + 'px';
             return this;
         },
+
         setHeight(height) {
             this.style.height = height + 'px';
             return this;
+        },
+    });
+
+    document.body.appendChild(textEditor);
+    textEditor.value = textBox.text();
+    textEditor
+        .setPosition(type === 'title' ? 22 : areaPosition.x, areaPosition.y)
+        .setWidth(taskRect.width())
+        .setHeight(type === 'title' ? 22 : taskRect.height() - 22);
+
+    textEditor.focus();
+    textEditor.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            parent.width(taskRect.width());
+            textBox.wrap('word');
+            textBox.text(textEditor.value);
+            document.body.removeChild(textEditor);
+            if (type === 'description') {
+                taskRect.height(textBox.height() + parent.height());
+                if (taskRect.height() >= 250) {
+                    textBox.height(230)
+                    taskRect.height(textBox.height()+22)
+            }}
+            save_state_change([parent.id, textBox.text()], type);
+        }
+
+        if (event.key === 'Escape') {
+            document.body.removeChild(textEditor);
         }
     });
-            document.body.appendChild(textarea);
-            textarea.value = textbox.text()
-            textarea
-                .setPosition(areapos.x, areapos.y)
-                .setWidth(b.width() - a)
-                .setHeight(b !== 0 ? b.height() - titleheight : titleheight);
-            
-            lol(areapos)
-
-            textarea.focus();
-            textarea.addEventListener('keydown', function (e) {
-                // hide on enter
-                lol(e.key)
-                if (e.key === "Enter") {
-                    txtelement.width(b.width());
-                    txtelement.wrap('char')
-                txtelement.text(textarea.value);
-                document.body.removeChild(textarea);
-                save_state_change([parent.id(),txtelement.text()])
-                }
-                if (e.key === "Escape") {
-                    document.body.removeChild(textarea)
-                }
-            });
 }

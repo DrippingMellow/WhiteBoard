@@ -1,4 +1,6 @@
-import { UrlAdress, lol } from "../worker.js";
+
+
+
 
 /**
  * Loads tickets, to show them above the kanban, for the user to see and add.
@@ -35,7 +37,7 @@ async function getTickets() {
  * @returns {Promise<void>} A Promise that resolves when the tickets have been
  * displayed in the UI.
  */
-export function displayTickets() {
+function displayTickets() {
 	const tasksContainer = document.querySelector('#tasks');
 	const ticketsContainer = document.querySelector('.NeueTasksGehege');
 

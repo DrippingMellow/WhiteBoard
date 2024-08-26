@@ -1,4 +1,4 @@
-import { lol, UrlAdress } from "../worker.js";
+
 
 /**
  * Send the board to save
@@ -25,27 +25,47 @@ async function sendBoard(boarditems, requestURL) {
 	});
 }
 function saveBoardState() {
-	const board = { boardid: 1, columns: columns.map(column => ({
-		id: column.id,
-		x: column.x,
-		y: column.y,
-		nodes: state.filter(node => column.start < node.objectData.group && node.objectData.group < column.end).map(node => ({
-			id: node.id,
-			objectData: {
-				...node.objectData,
-				cords: {
-					xPercent: node.objectData.cords.x / stage.width(),
-					yPercent: node.objectData.cords.y / stage.height()
+	const boardData = {
+		boardId: 1,
+		columns: columns.map(column => ({
+			id: column.id,
+			x: column.x,
+			y: column.y,
+			nodes: state
+				.filter(node => column.start <= node.objectData.group && node.objectData.group <= column.end)
+				.map(node => ({
+					id: node.id,
+					objectData: {
+						...node.objectData,
+						coordinates: {
+							xPercent: node.objectData.cords.x / stage.width(),
+							yPercent: node.objectData.cords.y / stage.height(),
+						},
+						attachedToColumn: node.attachedToColumn || null,
+					},
+				})),
+		})),
+		nodes: state
+			.map(node => ({
+				id: node.id,
+				objectData: {
+					...node.objectData,
+					coordinates: {
+						xPercent: node.objectData.cords[0] / stage.width(), // stage.find("#" + node.id).getAbsolutePosition().x.replace("px", "")
+						yPercent: node.objectData.cords[1] / stage.height(),
+					},
 				},
-				attachedToColumn: node.attachedToColumn || "column1"
-			}
-		}))
-	}))};
-	const requestURL = UrlAdress + "/api/PuttodoItem";
-	lol(board);
-	a = btoa(JSON.stringify(board, null, 2));
-	let awnser = sendBoard(a, requestURL);
-	lol("saved " + awnser + " under: " + board.id);
+			})),
+	};
+
+	console.log('boardData:', boardData);
+	const requestUrl = UrlAdress + "/api/PutKanban";
+	const boardString = JSON.stringify(boardData, null, 2);
+	const boardBytes = btoa(boardString);
+
+	sendBoard(boardBytes, requestUrl).then((response) => {
+		boardData.boardId = response;
+	});
 };
 
 /**
@@ -55,11 +75,31 @@ function saveBoardState() {
  * @param {string} type - The type of the state change.
  * @return {undefined}
  */
-function save_state_change(value, type) {
+function save_state_change(value, type) {	
 	const id = value[0];
 	const pos = value[1];
-	JSON.stringify(id, pos, type);
-	lol(type + " " + value + "saved in: ");
+	console.log(type)
+	node = state.filter(node => id == node.id)
+	switch (type) {
+		case "position":
+				node[0].objectData.cords = pos
+				break;
+			case "color":
+				node[0].objectData.color = pos
+				break;
+			case "description":
+				node[0].objectData.text = pos
+				break;
+			case "title":
+				node[0].objectData.title = pos
+				break;
+			case "column":
+				node[0].objectData.attachedToColumn = pos
+				break;
+			default:
+				throw new Error("Invalid type! please look at /function/sendBoard.js for the save_state_change function!");
+				break;
+	}
+	lol(((pos.x + " " + pos.y) || pos)  + " as " + type + " saved for object: " + id);
 };
-globalThis.save_state_change = save_state_change();
 

@@ -1,7 +1,4 @@
-import { displayTickets } from "./functions/displayTickets.js"
-import { start } from "./functions/start.js"
-
-export let i = 0 //Iterator for ItemID
+let i = 0 //Iterator for ItemID
 globalThis.i = 0
 let o = 0 //iterator for ColumnID
 globalThis.o = 0
@@ -9,7 +6,7 @@ globalThis.o = 0
 //var n = 0 //iterator for NoteID 
 let state = []
 globalThis: state  //Tasks 
-export const requestId = 13 //ID for request
+const requestId = 10 //ID for request
 globalThis: requestId;
 const board = 0
 globalThis: board
@@ -17,14 +14,14 @@ globalThis: board
 /**
  * @constant {string} UrlAdress - Is the [Domain / Url] on which the API [is running on / can be spocken to].
  */
-export const UrlAdress = "https://localhost:7064" //Enter your Domain here
+const UrlAdress = "https://localhost:7064" //Enter your Domain here
 
 Cache.bind()
 
 globalThis.lol = function lol(value) {
 	console.log(value)
 }
-export function lol(value) {
+function lol(value) {
 	console.log(value)
 }
 
@@ -35,6 +32,13 @@ function setupMenu() {
     document.getElementById('delete-button').addEventListener('click', () => {
         if (currentShape) {
             const parent = currentShape.getParent();
+            switch (typeof(currentShape)) {
+                case "node":
+                    notes.taskdelete(currentShape);
+                    break;
+                case "column":
+                    break;
+            }
             parent.destroy();
         }
     });
@@ -61,6 +65,7 @@ function setupMenu() {
         menuNode.style.left = containerRect.left + stage.getPointerPosition().x + 4 + 'px';
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
 	try {
