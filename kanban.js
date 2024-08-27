@@ -15,7 +15,7 @@ stage.add(layerguide)
 stage.on('')
 // if (d == null){
   
-  columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
+  //columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
 //}
 var columnWidth
 
@@ -109,6 +109,13 @@ class ColCol {
     resetColumnPos() {
         ColumnLayer.destroyChildren()
         this.initColumns()
+    }
+    
+    deleteColumn(name) {
+        const index = columns.findIndex(column => column.name === name);
+        if (index !== -1) {
+            columns.splice(index, 1);
+        }
     }
 };
 
@@ -453,7 +460,7 @@ function addTask(title=textarea.value, value="no value", color_pick = document.q
 //     });
 //     return guidesCache.get(skipShape);
 // }
-
+colcol.initColumns();
 // were can we snap our objects?
 function getLineGuideStops(skipShape) {
     guideItem = []

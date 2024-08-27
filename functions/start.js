@@ -21,10 +21,16 @@ async function start() {
 		dataType: 'json',
 		contentType: 'application/json',
 		success: function (data) {
-			var parsedata = JSON.parse(atob(atob(data.json)));
-			d = Object.assign({}, parsedata);
-			lol(d);
-			return (data);
+			try {
+				var parsedata = JSON.parse(atob(atob(data.json)));
+				d = Object.assign({}, parsedata);
+				lol(d);
+				return (data);
+			}
+			catch (error) {
+				console.error("No data:", error);
+			}
+			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
 			console.error('Error:', textStatus, errorThrown);

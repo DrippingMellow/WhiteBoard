@@ -6,7 +6,7 @@ globalThis.o = 0
 //var n = 0 //iterator for NoteID 
 let state = []
 globalThis: state  //Tasks 
-const requestId = 10 //ID for request
+let requestId = 10 //ID for request
 globalThis: requestId;
 const board = 0
 globalThis: board
@@ -37,6 +37,7 @@ function setupMenu() {
                     notes.taskdelete(currentShape);
                     break;
                 case "column":
+                    colcol.deleteColumn(currentShape.name);
                     break;
             }
             parent.destroy();
@@ -66,13 +67,27 @@ function setupMenu() {
     });
 }
 
+// function loadstart() {
+//     requestId = document.getElementById('requestID').value
+//     try {
+// 		start();
+// 		displayTickets();
+// 		setupMenu();
+// 	} catch (error) {
+// 		console.error("An error occurred:", error);
+// 	}
+// }
 
 document.addEventListener("DOMContentLoaded", () => {
-	try {
-		start();
-		displayTickets();
-		setupMenu();
-	} catch (error) {
-		console.error("An error occurred:", error);
-	}
+    const startButton = document.getElementById('startButton');
+    startButton.addEventListener('click', () => {
+        requestId = document.getElementById('requestID').value
+        try {
+            start();
+            displayTickets();
+            setupMenu();
+        } catch (error) {
+            console.error("An error occurred:", error);
+        }});
 });
+
