@@ -1,10 +1,13 @@
+:root{
+    --defining-color:rgb(102,175,219);
+}
+
 .button {color: red;}
 body {
     height: auto;
-    background-color: rgb(165, 165, 165);
+    background-color: rgb(204, 228, 243);
     overflow:visible;
 }
-
 
 #scroll-container{
     border-top-style: solid;
@@ -13,7 +16,6 @@ body {
     scrollbar-width: auto;
     overflow-x:visible;
     display: flex;
-
     height:75dvh;
 }
 
@@ -33,6 +35,17 @@ body {
     flex-wrap: wrap;
     flex-direction: column;
     position: relative;
+    button{
+        border-radius: 10px;
+        border-style: solid;
+        border-color: rgb(255, 255, 255);
+        border-width: 2px;
+        background-color: rgb(255, 255, 255);
+        max-width: 100%;
+        max-height: 100%;
+        scrollbar-width: auto;
+        text-wrap: nowrap;
+    }
     .topgoru-left{
         max-width: 100%;
         display: flex;
@@ -87,7 +100,7 @@ body {
             
         }
         button:hover{
-            background-color: rgb(221, 162, 162);
+            background-color: rgb(225, 242, 237);
             border-color: rgb(255, 255, 255);
             border-width: 2px;
             border-style: solid;
@@ -142,16 +155,33 @@ body {
     border-width: 2px;
     background-color: rgb(255, 255, 255);
     width: fit-content();
+    height: min-content();
     max-width: 100%;
-    max-height: 100%;
+    max-height: min-content();
     resize: none;
     overflow: hidden;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: auto;
+    text-align: center;
+    div {
+        text-align: center;
+        height: min-content();
+    }
 }
 .retzhuj {
     position: relative;
     left: 0px;
     border-bottom-style:solid;
+    background-color: var(--defining-color);
+    div {
+        display: flex;
+        .searchbar{
+            border-radius: 10px;
+            border-style: solid;
+            border-color: rgb(255, 255, 255);
+            border-width: 2px;
+            background-color: rgb(255, 255, 255);
+        }
+    }
 }

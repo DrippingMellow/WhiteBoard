@@ -10,40 +10,47 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/konva@9/konva.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="top">
-        <div class="topgoru">
-            <div class="topgoru-left">
-                <button it="danger" class="btn btn-outline-danger">
-                    Danger
-                </button>
-                <button onclick="addColumn()">Add Column</button>
-                <button onclick="addTask()">Create Note</button>
-                <button onclick="loadkanban()"></button>
-                <button onclick="loadkanson()"></button>
-            </div>
-            <div id="secret">
-                <div id="mynumber" data-mynumber="1">Test 1</div>
-                <div data-mynumber="2">Test 2</div>
-            </div>
-        
-            <div class="topgoru-right">
-                <div class='plusElement btn null' onclick='saveBoardState()' id='addnote-${column.id}'>+</div>
-                <input id="textarea" type="text" placeholder="Add a title...">
-                <input id="color_pick" type="color">
-                <button onclick="notes.tasksToTop()">bring to top</button>
+        <div class="top-left">
+            <img id="Image" src="img/Logo_UniTrier.svg" alt="Trier University Logo" style="width: 200px; margin: 40px; min-width:30mm"></img>
+            <div class="topgoru">
+                <div class="topgoru-left">
+                    <!-- <button it="danger" class="btn btn-outline-danger">Danger</button> -->
+                    <button onclick="addColumn()">Add Column</button>
+                    <button onclick="addTask()">Create Note</button>
+                    <button onclick="loadkanban()"></button>
+                    <button onclick="loadkanson()"></button>
+                </div>
+                <div id="secret">
+                    <div id="mynumber" data-mynumber="1">Test 1</div>
+                    <div data-mynumber="2">Test 2</div>
+                </div>
+            
+                <div class="topgoru-right">
+                    <div class='plusElement btn null' onclick='saveBoardState()' id='addnote-${column.id}'>+</div>
+                    <input id="textarea" type="text" placeholder="Add a title...">
+                    <input id="color_pick" type="color">
+                    <button onclick="notes.tasksToTop()">bring to top</button>
+                </div>
             </div>
         </div>
         <div class="llll">
             <div class="NeueTasksGehege">
                 <div class="retzhuj">
-                    <h2>
-                        Tasks
-                    </h2>
+                    <div>
+                        <h2>Tasks</h2>
+                        
+                        <div id="searchbar">
+                        <!-- /// TODO: Add search bar with dropdown ///
+                        /* Tickets, Wiki, Aufgaben, etc. */ -->
+                            <!-- <input type="text" placeholder="Search..."> -->
+                        </div>
+                    </div>
+                    
                     <div id="tasks"></div>
                 </div>
             </div>

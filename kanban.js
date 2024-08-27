@@ -70,7 +70,7 @@ class ColCol {
                 const textrec = new Konva.Rect({
                     width: columnWidth - space,
                     height: text.height(),
-                    fill: "#fcd",
+                    fill: "#007ac3",
                     cornerRadius:([10, 10, 0, 0]),
                     name: 'textrec'
                 })
@@ -292,9 +292,10 @@ class Note {
   
     attachToColumn(taskGroup, column) {
       lol(taskGroup + " " + column)
-      this.attachedToColumn = column.name;
-      state.find(id => id  = element => {
-        element.objectData.attachedToColumn = column.name;
+      this.attachedToColumn = column.attrs.id;
+      id = this.id
+      state.find(id => id = element => {
+        element.objectData.attachedToColumn = column.attrs.id;
       });
       taskGroup.moveTo(column)
       taskGroup.position({
@@ -404,6 +405,54 @@ function addTask(title=textarea.value, value="no value", color_pick = document.q
     notes.createNote(title, value, 10, 400, color_pick);
 }
 
+
+// const guidesCache = new Map();
+// function getLineGuideStops(skipShape) {
+//     if (guidesCache.has(skipShape)) {
+//         return guidesCache.get(skipShape);
+//     }
+//     const vertical = [0, stage.width() / 2, stage.width()];
+//     const horizontal = [0, stage.height() / 2, stage.height()];
+//     const childs = stage.getChildren();
+//     const guideItem = [];
+//     guideItem = []
+//     // we can snap to stage borders and the center of the stage
+//     var vertical = [0, stage.width() / 2, stage.width()];
+//     var horizontal = [0, stage.height() / 2, stage.height()];
+
+//     const childs = stage.getChildren()
+//     childs.forEach(child => {
+//         const children = child.getChildren();
+//         const children = child.getChildren()
+//         children.forEach((guideItem) => {
+//             if (guideItem === skipShape) {
+//                 return;
+//             }
+//             const box = guideItem.getClientRect();
+//             // and we can snap to all edges of shapes
+//               }
+//               var box = guideItem.getClientRect();
+//               // and we can snap to all edges of shapes
+//             if (guideItem.name() === 'column') {
+//                 vertical.push(box.x + box.width-1, box.x + box.width / 2);
+//                 horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
+//                 return;
+//                 vertical.push([box.x + box.width-1, box.x + box.width / 2]);
+//               horizontal.push([box.y, box.y + box.height, box.y + box.height / 2]);
+//               return;
+//             }
+//             horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
+//               horizontal.push([box.y, box.y + box.height, box.y + box.height / 2]);
+//             });
+            
+//         });
+//     });
+//     guidesCache.set(skipShape, {
+//         vertical: vertical.flat(),
+//         horizontal: horizontal.flat(),
+//     });
+//     return guidesCache.get(skipShape);
+// }
 
 // were can we snap our objects?
 function getLineGuideStops(skipShape) {
@@ -651,3 +700,4 @@ function getLineGuideStops(skipShape) {
     // clear all previous lines on the screen
     ColumnLayer.find('.guid-line').forEach((l) => l.destroy());
   });
+
