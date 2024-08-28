@@ -226,19 +226,19 @@ class Note {
             TaskTextEditor(local_parent, taskTitle,stageBox, 'title', taskRect);
         });
 
-        // taskGroup.on('dragmove', () => {
-        //   this.checkAttachment(taskGroup);
-        // });
+        taskGroup.on('dragmove', () => {
+          this.checkAttachment(taskGroup);
+        });
     
-        // Add hover functionality
-        // taskGroup.on('mouseenter', () => {
-        //   this.startHoverTimer(taskGroup);
-        // });
+        //Add hover functionality
+        taskGroup.on('mouseenter', () => {
+          this.startHoverTimer(taskGroup);
+        });
     
-        // taskGroup.on('mouseleave', () => {
-        //   this.clearHoverTimer();
-        // });
-        // return taskGroup;
+        taskGroup.on('mouseleave', () => {
+          this.clearHoverTimer();
+        });
+        return taskGroup;
     };
 
     /// TODO: Column should change the color, when the task is dragged over it, to show that it is about to be attached ///
@@ -271,6 +271,7 @@ class Note {
       });
   
       if (nearestColumn.x) {
+        lol("this")
         this.attachToColumn(taskGroup, nearestColumn);
       }
     }
@@ -278,16 +279,18 @@ class Note {
     attachToColumn(taskGroup, column) {
       lol(taskGroup + " " + column)
       this.attachedToColumn = column.attrs.id;
-      id = this.id
+      //id = this.id
       state.find(id => id = element => {
         element.objectData.attachedToColumn = column.attrs.id;
       });
+      
       taskGroup.moveTo(column)
       taskGroup.position({
         x: taskGroup.x() - column.x(),
         y: taskGroup.y()
       });
       ColumnLayer.draw();
+      save_state_change([taskGroup.id(), column.id()], "column")
     }
   
     detachFromColumn(taskGroup) {
@@ -350,26 +353,27 @@ class Note {
       var current_group = ([])
 
       state.forEach((a) => {
+        if (a.objectData.attachedToColumn == null) {
+          return;
+        }
         if (typeof(a) === "string"){
           return;
         }
         lol(r)
-        const {group, object} = a
+        const group = a.objectData.attachedToColumn
+        const object = stage.findOne('#' + a.id);
         lol(group, object)
         if (group != current_group) {
           r = 44 // reset to top
         }
-        if (group === object.x()) {
-          current_group = object.x()
-          lol(object)
+
+          current_group = group
           const child = object.getChildren()[0]
           var start = 44
           object.position({x: object.x(), y: r})
           r = r + child.height()
           lol(r)
-        }
-          
-      })
+        })
     };
     taskdelete(element) {
       element = element

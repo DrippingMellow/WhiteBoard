@@ -77,7 +77,7 @@ function createTextEditor(parent, b , stageBox, textBox, type, a = 0 , taskRect)
                     textBox.height(230)
                     taskRect.height(textBox.height()+22)
             }}
-            save_state_change([parent.id, textBox.text()], type);
+            save_state_change([parent.id(), textBox.text()], type);
         }
 
         if (event.key === 'Escape') {

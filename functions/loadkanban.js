@@ -41,5 +41,20 @@ function loadkanban(d) {
 			// 	console.log('note:', note);
 			// }
 	})
+	stage.find(".note").forEach((note) => {
+		console.log(note.id());
+		const noteId = note.id();
+		const noteObject = state.find((n) => n.id === noteId);
+		obj = noteObject.objectData.attachedToColumn;
+		console.log(noteObject);
+		if (obj != (false || null)) {
+			lol(obj)
+			const attachedColumn = ColumnLayer.findOne((col) => col.id() === obj);
+			lol(attachedColumn)
+			if (attachedColumn) {
+				notes.attachToColumn(note, attachedColumn);
+			}
+		}
+	});
 	//colcol.initColumns()
 }

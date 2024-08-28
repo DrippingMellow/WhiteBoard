@@ -51,8 +51,8 @@ function saveBoardState() {
 				objectData: {
 					...node.objectData,
 					coordinates: {
-						xPercent: node.objectData.cords[0] || node.objectData.cords.x / stage.width(), // stage.find("#" + node.id).getAbsolutePosition().x.replace("px", "")
-						yPercent: node.objectData.cords[1] || node.objectData.cords.y / stage.height(),
+						xPercent: (node.objectData.cords[0] || node.objectData.cords.x) / stage.width(), // stage.find("#" + node.id).getAbsolutePosition().x.replace("px", "")
+						yPercent: (node.objectData.cords[1] || node.objectData.cords.y) / stage.height(),
 					},
 				},
 			})),
@@ -79,28 +79,28 @@ function save_state_change(value, type) {
 	const id = value[0];
 	const pos = value[1];
 	console.log(type)
-	node = state.filter(node => id == node.id)
+	node = state.filter(node => id == node.id)[0];
 	switch (type) {
 		case "position":
 			console.log(pos)
-				node[0].objectData.cords = pos
-				break;
-			case "color":
-				node[0].objectData.color = pos
-				break;
-			case "description":
-				node[0].objectData.text = pos
-				break;
-			case "title":
-				node[0].objectData.title = pos
-				break;
-			case "column":
-				node[0].objectData.attachedToColumn = pos
-				break;
-			default:
-				throw new Error("Invalid type! please look at /function/sendBoard.js for the save_state_change function!");
-				break;
+			node.objectData.cords = pos
+			break;
+		case "color":
+			node.objectData.color = pos
+			break;
+		case "description":
+			node.objectData.text = pos
+			break;
+		case "title":
+			node.objectData.title = pos
+			break;
+		case "column":
+			node.objectData.attachedToColumn = pos
+			break;
+		default:
+			throw new Error("Invalid type! please look at /function/sendBoard.js for the save_state_change function!");
+			break;
 	}
-	lol(((pos.x + " " + pos.y) || pos)  + " as " + type + " saved for object: " + id);
+	lol((typeof pos == "object" ? pos.x + " " + pos.y : pos)  + " as " + type + " saved for object: " + id);
 };
 
