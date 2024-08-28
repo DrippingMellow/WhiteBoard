@@ -219,28 +219,6 @@ class Note {
             var stageBox = stage.container().getBoundingClientRect();
             const type = 'description';
             TaskTextEditor(local_parent, taskText, stageBox, type, taskRect);
-
-            textarea.focus();
-            textarea.addEventListener('keydown', function (e) {
-                // hide on enter
-                lol(e.key)
-                if (e.key === "Enter") {
-                    taskText.width(taskRect.width()-10);
-                    taskText.wrap('word');
-                taskText.text(textarea.value);
-                
-                document.body.removeChild(textarea);
-                taskRect.height(taskText.height()+22)
-                if (taskRect.height() >= 250) {
-                    taskText.height(230)
-                    taskRect.height(taskText.height()+22)
-                }
-                save_state_change([local_parent,taskText.text(),taskRect.height()], "text")
-                }
-                if (e.key === "Escape") {
-                    document.body.removeChild(textarea)
-                }
-            });
         });
         taskTitle.on('click tap', () => {
             var local_parent = taskGroup;
@@ -248,19 +226,19 @@ class Note {
             TaskTextEditor(local_parent, taskTitle,stageBox, 'title', taskRect);
         });
 
-        taskGroup.on('dragmove', () => {
-          this.checkAttachment(taskGroup);
-        });
+        // taskGroup.on('dragmove', () => {
+        //   this.checkAttachment(taskGroup);
+        // });
     
         // Add hover functionality
-        taskGroup.on('mouseenter', () => {
-          this.startHoverTimer(taskGroup);
-        });
+        // taskGroup.on('mouseenter', () => {
+        //   this.startHoverTimer(taskGroup);
+        // });
     
-        taskGroup.on('mouseleave', () => {
-          this.clearHoverTimer();
-        });
-        return taskGroup;
+        // taskGroup.on('mouseleave', () => {
+        //   this.clearHoverTimer();
+        // });
+        // return taskGroup;
     };
 
     /// TODO: Column should change the color, when the task is dragged over it, to show that it is about to be attached ///
@@ -335,7 +313,7 @@ class Note {
       }
     }
 
-    /// TODO: Position Change correction, as adding columns brings the tasks to wrong positions. ///
+    /// FIXED: Position Change correction, as adding columns brings the tasks to wrong positions. ///
     resize_nodes(oldColWidth) {
         const all_notes = NotesLayer.find('.note')
         lol(all_notes)
@@ -366,7 +344,7 @@ class Note {
         NotesLayer.draw()
     };
 
-    /// FIXME: When task is attached to a column it has a problem with x. ///:
+    /// FIXME: It has a general problem (maybe with x). ///
     tasksToTop() {
       var r = 44
       var current_group = ([])
@@ -394,7 +372,8 @@ class Note {
       })
     };
     taskdelete(element) {
-      state.filter(function(element) {
+      element = element
+      state.filter(element => {
         return element.id != this.id;
       }, this);
     }
@@ -413,53 +392,7 @@ function addTask(title=textarea.value, value="no value", color_pick = document.q
 }
 
 
-// const guidesCache = new Map();
-// function getLineGuideStops(skipShape) {
-//     if (guidesCache.has(skipShape)) {
-//         return guidesCache.get(skipShape);
-//     }
-//     const vertical = [0, stage.width() / 2, stage.width()];
-//     const horizontal = [0, stage.height() / 2, stage.height()];
-//     const childs = stage.getChildren();
-//     const guideItem = [];
-//     guideItem = []
-//     // we can snap to stage borders and the center of the stage
-//     var vertical = [0, stage.width() / 2, stage.width()];
-//     var horizontal = [0, stage.height() / 2, stage.height()];
 
-//     const childs = stage.getChildren()
-//     childs.forEach(child => {
-//         const children = child.getChildren();
-//         const children = child.getChildren()
-//         children.forEach((guideItem) => {
-//             if (guideItem === skipShape) {
-//                 return;
-//             }
-//             const box = guideItem.getClientRect();
-//             // and we can snap to all edges of shapes
-//               }
-//               var box = guideItem.getClientRect();
-//               // and we can snap to all edges of shapes
-//             if (guideItem.name() === 'column') {
-//                 vertical.push(box.x + box.width-1, box.x + box.width / 2);
-//                 horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
-//                 return;
-//                 vertical.push([box.x + box.width-1, box.x + box.width / 2]);
-//               horizontal.push([box.y, box.y + box.height, box.y + box.height / 2]);
-//               return;
-//             }
-//             horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
-//               horizontal.push([box.y, box.y + box.height, box.y + box.height / 2]);
-//             });
-            
-//         });
-//     });
-//     guidesCache.set(skipShape, {
-//         vertical: vertical.flat(),
-//         horizontal: horizontal.flat(),
-//     });
-//     return guidesCache.get(skipShape);
-// }
 colcol.initColumns();
 // were can we snap our objects?
 function getLineGuideStops(skipShape) {

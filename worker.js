@@ -6,7 +6,7 @@ globalThis.o = 0
 //var n = 0 //iterator for NoteID 
 let state = []
 globalThis: state  //Tasks 
-let requestId = 10 //ID for request
+let requestId = 9 //ID for request
 globalThis: requestId;
 const board = 0
 globalThis: board
@@ -81,7 +81,7 @@ function setupMenu() {
 document.addEventListener("DOMContentLoaded", () => {
     const startButton = document.getElementById('startButton');
     startButton.addEventListener('click', () => {
-        requestId = document.getElementById('requestID').value
+        globalThis.requestId = document.getElementById('requestID').value
         try {
             start();
             displayTickets();

@@ -51,8 +51,8 @@ function saveBoardState() {
 				objectData: {
 					...node.objectData,
 					coordinates: {
-						xPercent: node.objectData.cords[0] / stage.width(), // stage.find("#" + node.id).getAbsolutePosition().x.replace("px", "")
-						yPercent: node.objectData.cords[1] / stage.height(),
+						xPercent: node.objectData.cords[0] || node.objectData.cords.x / stage.width(), // stage.find("#" + node.id).getAbsolutePosition().x.replace("px", "")
+						yPercent: node.objectData.cords[1] || node.objectData.cords.y / stage.height(),
 					},
 				},
 			})),
@@ -82,6 +82,7 @@ function save_state_change(value, type) {
 	node = state.filter(node => id == node.id)
 	switch (type) {
 		case "position":
+			console.log(pos)
 				node[0].objectData.cords = pos
 				break;
 			case "color":
