@@ -7,7 +7,7 @@
  */
 
 async function getTickets() {
-	var requestURL = UrlAdress + "/api/GetTickets/";
+	var requestURL = UrlAdress + "/api/Tickets/GetTickets/";
 	return new Promise((resolve, reject) => {
 		$.ajax({
 			url: requestURL,
@@ -29,35 +29,30 @@ async function getTickets() {
 // https://stackoverflow.com/questions/4965335/how-to-filter-results-in-a-select-dropdown-using-javascript
 // https://stackoverflow.com/questions/13596534/how-to-search-for-text-in-a-select-dropdown-using-javascript
 // TODO: Add search bar with dropdown
-// TODO (Steven): Seperate function into two functions.
 async function searchTickets() {
-	var searchTerm = document.getElementById('searchbar').querySelector('input').value.toLowerCase();
-	var requestURL = UrlAdress + "/api/SearchTickets?searchTerm=" + searchTerm;
-	return new Promise((resolve, reject) => {
-		$.ajax({
-			url: requestURL,
-			crossDomain: true,
-			dataType: 'json',
-			contentType: 'application/json',
-			success: function (data) {
-				lol(data);
-				resolve(data);
-			},
-			error: function (jqXHR, textStatus, errorThrown) {
-				reject(errorThrown);
-			}
-		});
-	}).then(function (data) {
-		var tickets = document.getElementById('tasks').querySelectorAll('.ticket-container');
-		for (const ticket of tickets) {
-			var ticketName = ticket.querySelector('.ticket').textContent.toLowerCase();
-			if (data.includes(ticketName)) {
-				ticket.style.display = 'block';
-			} else {
-				ticket.style.display = 'none';
-			}
-		}
-	});
+    const searchTerm = document.getElementById('searchbar').querySelector('input').value.toLowerCase();
+    const requestURL = UrlAdress + `/api/Tickets/SearchTickets?searchTerm=${searchTerm}`;
+	//const data = JSON.stringify({ searchTerm: searchTerm }, null, 2);
+    
+    $.ajax({
+        url: requestURL,
+        crossDomain: true,
+        dataType: 'json',
+        contentType: 'application/json',
+		data: null,
+        success: successFunction,
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error('Error:', textStatus, errorThrown);
+        }
+    });
+}
+
+function successFunction(data) {
+    const tickets = document.getElementById('tasks').querySelectorAll('.ticket-container');
+    tickets.forEach(ticket => {
+        const ticketName = ticket.querySelector('.ticket').textContent.toLowerCase();
+        ticket.style.display = data.includes(ticketName) ? 'block' : 'none';
+    });
 }
 
 document.getElementById('searchbar').querySelector('input').addEventListener('keyup', searchTickets);
