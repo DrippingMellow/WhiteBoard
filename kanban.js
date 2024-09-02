@@ -347,7 +347,7 @@ class Note {
         NotesLayer.draw()
     };
 
-    /// FIXME: It has a general problem (maybe with x). ///
+    /// FIXME: It has a general problem (maybe with x).  I somehow works now but in unexpected ways. ///
     tasksToTop() {
       var r = 44
       var current_group = ([])
@@ -375,11 +375,16 @@ class Note {
           lol(r)
         })
     };
-    taskdelete(element) {
-      element = element
+    /// FIXME: It filters out the tasks that has to be removed, but it doesn't remove it. ///
+    taskdelete(delement) {
+      //element = element
+      lol("delete: " + delement.id())
+      save_state_change([delement.id()], "delete")
       state.filter(element => {
-        return element.id != this.id;
-      }, this);
+        console.log(element.id)
+        console.log(element.id != delement.id())
+        return element.id != delement.id();
+      }, state);
     }
 
 }

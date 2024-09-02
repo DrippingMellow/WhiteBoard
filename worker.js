@@ -11,6 +11,7 @@ globalThis: requestId;
 const board = 0
 globalThis: board
 
+
 /**
  * @constant {string} UrlAdress - Is the [Domain / Url] on which the API [is running on / can be spocken to].
  */
@@ -28,19 +29,22 @@ function lol(value) {
 function setupMenu() {
     const menuNode = document.getElementById('menu');
     menuNode.style.display = 'none';
-
     document.getElementById('delete-button').addEventListener('click', () => {
+        lol("event")
         if (currentShape) {
             const parent = currentShape.getParent();
-            switch (typeof(currentShape)) {
-                case "node":
-                    notes.taskdelete(currentShape);
+            lol(parent)
+            lol(parent.name())
+            switch (parent.name()) {
+                case "note":
+                    lol("note")
+                    notes.taskdelete(parent);
                     break;
                 case "column":
-                    colcol.deleteColumn(currentShape.name);
+                    lol("column")
+                    colcol.deleteColumn(parent);
                     break;
             }
-            parent.destroy();
         }
     });
 
@@ -48,10 +52,10 @@ function setupMenu() {
     window.addEventListener('click', () => {
         menuNode.style.display = 'none';
     });
-
     let currentShape;
 
     stage.on('contextmenu', function showDeleteButton(e) {
+        lol("e.target")
         e.evt.preventDefault();
         if (e.target === stage) {
             return;
@@ -67,22 +71,18 @@ function setupMenu() {
     });
 }
 
-// function loadstart() {
-//     requestId = document.getElementById('requestID').value
-//     try {
-// 		start();
-// 		displayTickets();
-// 		setupMenu();
-// 	} catch (error) {
-// 		console.error("An error occurred:", error);
-// 	}
-// }
+function selector() {
+    const selector = document.getElementById('topgoru-selector');
+    const selectedValue = selector.value;
+    selector.vale
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const startButton = document.getElementById('startButton');
     startButton.addEventListener('click', () => {
-        globalThis.requestId = document.getElementById('requestID').value
+        requestId = document.getElementById('backup-requestID').value
         try {
+            displayLoading();
             start();
             displayTickets();
             setupMenu();

@@ -6,6 +6,7 @@
  * @param {JSON} boarditems - Is a with 64 decoded JSon.
  */
 
+
 async function sendBoard(boarditems, requestURL) {
 	$.ajax({
 		type: "PUT",
@@ -13,7 +14,7 @@ async function sendBoard(boarditems, requestURL) {
 		crossDomain: true,
 		dataType: 'json',
 		contentType: 'application/json',
-		data: JSON.stringify({ Json: btoa(boarditems), Id: requestId }, null, 2),
+		data: JSON.stringify({ Json: boarditems, Id: requestId }, null, 2),
 		success: function (data) {
 			lol(data);
 			board.Id = data;
@@ -61,10 +62,20 @@ function saveBoardState() {
 	console.log('boardData:', boardData);
 	const requestUrl = UrlAdress + "/api/PutKanban";
 	const boardString = JSON.stringify(boardData, null, 2);
-	const boardBytes = btoa(boardString);
+	
+	const news = new TextEncoder().encode(boardString);
+	const deflate = new Zlib.Deflate(news)
+	var dataa = deflate.compress()
+	const boardBytes = btoa(boardString).length;
+	const boardBytesCompressed = btoa(dataa);
+	lol(boardBytesCompressed)
+	lol(dataa)
+	lol(atob(boardBytesCompressed))
+	lol(`Before Compression: ${news.length} bytes, After Compression: ${dataa.length} bytes, Compression Ratio: ${news.length / dataa.length} additional btoa ${boardBytesCompressed.length} bytes. ${boardBytes} would be the size with base64 encoding.`);
+	const boardBytese = btoa(boardString);
 
-	sendBoard(boardBytes, requestUrl).then((response) => {
-		boardData.boardId = response;
+	sendBoard(boardString, requestUrl).then((response) => {
+	 	boardData.boardId = response;
 	});
 };
 
@@ -96,6 +107,10 @@ function save_state_change(value, type) {
 			break;
 		case "column":
 			node.objectData.attachedToColumn = pos
+			break;
+		case "delete":
+			state = state.filter(node => id != node.id)
+			pos = null
 			break;
 		default:
 			throw new Error("Invalid type! please look at /function/sendBoard.js for the save_state_change function!");

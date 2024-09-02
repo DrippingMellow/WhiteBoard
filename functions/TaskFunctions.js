@@ -59,6 +59,7 @@ function createTextEditor(parent, b , stageBox, textBox, type, a = 0 , taskRect)
 
     document.body.appendChild(textEditor);
     textEditor.value = textBox.text();
+    /// FIXME: The text box is placed at a wrong position vertically
     textEditor
         .setPosition(type === 'title' ? 22 : areaPosition.x, areaPosition.y)
         .setWidth(taskRect.width())

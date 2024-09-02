@@ -47,9 +47,16 @@ body {
         text-wrap: nowrap;
     }
     .topgoru-left{
+        width: 100%;
         max-width: 100%;
         display: flex;
         flex-wrap: nowrap;
+        justify-content: space-between;
+        button{
+            display: flex;
+            width: -webkit-fill-available;
+            width: -moz-available;
+        }
     }
     #secret{
         max-width: 100%;
@@ -133,7 +140,7 @@ body {
     overflow-x: hidden;
     scrollbar-width: auto;
     cursor: pointer;
-    resize: both;
+    resize: vertical;
 }
 #tasks{
     display: flex;
