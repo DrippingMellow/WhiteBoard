@@ -33,8 +33,6 @@ function setupMenu() {
         lol("event")
         if (currentShape) {
             const parent = currentShape.getParent();
-            lol(parent)
-            lol(parent.name())
             switch (parent.name()) {
                 case "note":
                     lol("note")
@@ -42,7 +40,7 @@ function setupMenu() {
                     break;
                 case "column":
                     lol("column")
-                    colcol.deleteColumn(parent);
+                    deleteColumn(parent);
                     break;
             }
         }
@@ -77,12 +75,11 @@ function selector() {
     selector.vale
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", () => {  
     const startButton = document.getElementById('startButton');
     startButton.addEventListener('click', () => {
         requestId = document.getElementById('backup-requestID').value
         try {
-            displayLoading();
             start();
             displayTickets();
             setupMenu();
@@ -90,4 +87,3 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("An error occurred:", error);
         }});
 });
-

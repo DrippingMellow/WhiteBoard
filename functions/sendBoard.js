@@ -52,8 +52,8 @@ function saveBoardState() {
 				objectData: {
 					...node.objectData,
 					coordinates: {
-						xPercent: (node.objectData.cords[0] || node.objectData.cords.x) / stage.width(), // stage.find("#" + node.id).getAbsolutePosition().x.replace("px", "")
-						yPercent: (node.objectData.cords[1] || node.objectData.cords.y) / stage.height(),
+						xPercent: /*(node.objectData[0] || node.objectData.cords.x )*/ node.objectData.x / stage.width(), // stage.find("#" + node.id).getAbsolutePosition().x.replace("px", "")
+						yPercent: /*(node.objectData.cords[1] || node.objectData.cords.y || node.objectData.y)*/ node.objectData.y / stage.height(),
 					},
 				},
 			})),

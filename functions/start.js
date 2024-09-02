@@ -70,5 +70,6 @@ async function start() {
 		}
 	}).done(function () {
 		loadkanban(d);
+		console.log("done");
 	});
 }
