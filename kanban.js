@@ -95,13 +95,14 @@ class ColumnManager {
     }
 
     resizeNotes(oldColWidth) {
-        notes.resize_nodes(oldColWidth);
+        notes.resize_nodes(oldColWidth, this.columnWidth);
     }
 
     resetColumnPos() {
+        const oldColWidth = this.columnWidth;
         ColumnLayer.destroyChildren();
         this.initColumns();
-        this.resizeNotes(this.columnWidth);
+        this.resizeNotes(oldColWidth);
     }
 
     deleteColumn(name) {
@@ -330,7 +331,7 @@ class ColumnManager {
     }
 
     /// FIXED: Position Change correction, as adding columns brings the tasks to wrong positions. ///
-    resize_nodes(oldColWidth) {
+    resize_nodes(oldColWidth, columnWidth) {
         const all_notes = NotesLayer.find('.note')
         lol(all_notes)
 
