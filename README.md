@@ -1,4 +1,17 @@
 Latest changes:
+- Changed Code behavior, resulting in:
+  - an infinit increase in loading speed. 10'000 (Notes / Task) are loading in under 15 seconds now. Previusly it took 25 sec. for around 1000 Tasks
+  - an heavy decrease of load, on the pc.
+- Fixed: Deleting Items now works.
+- class rename: Colcol > ColumnManager
+  \- Colcol is now ColumnManager!
+- Todo:
+   - Snapping re-work
+   - Notes Class re-work
+
+
+
+**Most important changes**:
 
 - FIXED: When Loading Kanban it didn't re-attach the note to the column.
 - FIXED: The saving function was only fully functional, when a position was given.
@@ -20,6 +33,9 @@ With WhiteBoard you can currently do:
 - Moving
   - Moving Tasks
   - Moving Columns
+- Removing
+  - Removing Tasks
+  - Removing Columns
 - Editing
   - Edit Title of Tasks
   - Edit Title of Columns
