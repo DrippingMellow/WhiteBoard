@@ -46,15 +46,7 @@ async function start() {
 					default:
 						enddata = JSON.parse(data.json);
 						break;
-
 				}
-
-				// var inflate = new Zlib.Inflate(aato);
-				// lol(inflate)
-				// var plain2 = inflate.decompress();
-				// lol(plain2)
-				// var plain = new TextDecoder("utf-8").decode(plain2);
-				// lol(plain)
 				d = Object.assign({}, enddata);
 				if (d == {}){
 					console.error("No data:", data);
@@ -65,7 +57,6 @@ async function start() {
 			catch (error) {
 				console.error("No data:", error);
 			}
-			
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
 			console.error('Error:', textStatus, errorThrown);

@@ -6,7 +6,7 @@ globalThis.o = 0
 //var n = 0 //iterator for NoteID 
 let state = []
 globalThis: state  //Tasks 
-let requestId = 9 //ID for request
+let requestId = 13 //ID for request
 globalThis: requestId;
 const board = 0
 globalThis: board
@@ -19,9 +19,6 @@ const UrlAdress = "https://localhost:7064" //Enter your Domain here
 
 Cache.bind()
 
-globalThis.lol = function lol(value) {
-	console.log(value)
-}
 function lol(value) {
 	console.log(value)
 }
@@ -75,7 +72,14 @@ function selector() {
     selector.vale
 }
 
-document.addEventListener("DOMContentLoaded", () => {  
+document.addEventListener("DOMContentLoaded", () => { 
+    try {
+        start();
+        displayTickets();
+        setupMenu();
+    } catch (error) {
+        console.error("An error occurred:", error);
+    } 
     const startButton = document.getElementById('startButton');
     startButton.addEventListener('click', () => {
         requestId = document.getElementById('backup-requestID').value

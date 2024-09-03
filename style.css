@@ -161,7 +161,6 @@ body {
             scrollbar-width: auto;
             text-wrap: nowrap;
             transition: 1s;
-            
         }
         button:hover{
             background-color: rgb(225, 242, 237);
@@ -201,7 +200,6 @@ body {
             scrollbar-width: auto;
             text-wrap: nowrap;
             transition: 1s;
-            
         }
     }
     

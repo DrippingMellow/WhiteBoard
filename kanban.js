@@ -13,11 +13,8 @@ stage.add(ColumnLayer);
 stage.add(NotesLayer);
 stage.add(GuideLayer)
 stage.on('')
-// if (d == null){
-  
   //columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
-//}
-//var columnWidth;
+
 class ColumnManager {
     constructor() {
         this.columnWidth = stage.width();
@@ -122,7 +119,7 @@ class ColumnManager {
   // Initialize
   const columnManager = new ColumnManager();
   columnManager.initColumns();
-  class Note {
+class Note {
     constructor(title, text, x, y){
       this.title = title;
       this.text = text;
@@ -136,7 +133,6 @@ class ColumnManager {
     // Function to create a task
     createNote(title, text="no value", x, y, color="#fff", attachedToColumn=false) {
       const NoteFactory = (() => {
-
         const createNote = (title, text = "no value", x, y, color = "#fff", attachedToColumn = false) => {
           const id = `note${this.noteId++}`;
           const group = new Konva.Group({
@@ -186,7 +182,6 @@ class ColumnManager {
             data: { title, text, x, y, color, attachedToColumn }
           };
         };
-
         return { createNote };
       })();
 
@@ -240,8 +235,9 @@ class ColumnManager {
         TaskTextEditor(local_parent, note.titleText, stageBox, 'title', note.rect);
       });
       note.group.on('dragmove', () => {
+        note.group.isDragging();
         this.checkAttachment(note.group);
-        this.clearHoverTimer();
+        this.startHoverTimer();
       });
       //Add hover functionality
       note.group.on('mouseenter', () => {
@@ -254,45 +250,77 @@ class ColumnManager {
     };
 
     /// TODO: Column should change the color, when the task is dragged over it, to show that it is about to be attached ///
-    startHoverTimer(taskGroup) {
-      lol("start")
+
+    hoverManager = () => {
+      
+    }
+    async startHoverTimer(taskGroup) {
       this.clearHoverTimer();
-      this.hoverTimer = setTimeout(() => {
-        this.attachToNearestColumn(taskGroup);
-      }, 1000); // Hover for 1 second before attaching
+      taskGroup.isDragging() == false ? this.clearHoverTimer() : lol("is being dragged");
+      let nearestColumn = this.getNearestColumn(taskGroup);
+      let pre = nearestColumn.getChildren()[1].fill();
+      lol(nearestColumn)
+      nearestColumn.getChildren()[1].fill("#f00");
+      const interval = setInterval(() => {
+        if (taskGroup.attachedToColumn != nearestColumn.attrs.id) {
+          nearestColumn = this.getNearestColumn(taskGroup);
+          nearestColumn.getChildren()[1].fill("#f00");
+          this.hoverTimer = setTimeout(() => {
+            taskGroup.isDragging() == false ? lol("skip") : this.attachToColumn(taskGroup, nearestColumn);
+          }, 4000);
+        }
+        nearestColumn.getChildren()[1].fill(pre);
+      }, 500)
+      
     }
   
     clearHoverTimer() {
       if (this.hoverTimer) {
+        clearInterval("interval")
         clearTimeout(this.hoverTimer);
         this.hoverTimer = null;
       }
     }
-  
-    attachToNearestColumn(taskGroup) {
+    getNearestColumn(taskGroup) {
       const columns = ColumnLayer.find('.column');
       let nearestColumn = null;
       let minDistance = Infinity;
       const maxDistance = 50; // Maximum distance for attachment
-  
-      columns.forEach((column) => {
-        if (Konva.Util.haveIntersection(taskGroup.getClientRect(), column.getClientRect())) {
-          nearestColumn = column;
-          lol(nearestColumn)
-          return ; // Break the loop if we find an intersecting column
-        }
-      });
-  
-      if (nearestColumn.x) {
-        lol("this")
-        this.attachToColumn(taskGroup, nearestColumn);
-      }
+      lol(taskGroup.getClientRect())
+      nearestColumn = columns.filter(column => Konva.Util.haveIntersection(taskGroup.getClientRect() , column.getClientRect()) & Konva.Util.haveIntersection(taskGroup.getAbsolutePosition() , column.getClientRect()) == true);
+      //nearestColumn = nearestColumns.forEach(column => taskGroup.getClientRect() - column.getClientRect() < minDistance && taskGroup.getClientRect() - column.getClientRect() > maxDistance ? nearestColumn = column : nearestColumn = nearestColumn);
+      lol(nearestColumn)
+        //earestColumn = column;
+      
+      return nearestColumn[0];
     }
+
+
+  /**
+   * Attaches the given task group to the nearest column if there is an intersection between the task group's rectangle and the column's rectangle.
+   *
+   * @param {Konva.Group} taskGroup - The task group to attach to a column.
+   * @return {void} This function does not return anything.
+   */
+    // attachToNearestColumn(taskGroup) {
+    //   const columns = ColumnLayer.find('.column');
+    //   columns.forEach((column) => {
+    //     if (Konva.Util.haveIntersection(taskGroup.getClientRect(), column.getClientRect())) {
+    //       nearestColumn = column;
+    //       lol(nearestColumn)
+    //       return ; // Break the loop if we find an intersecting column
+    //     }
+    //   });
+  
+    //   if (nearestColumn.x) {
+    //     lol("this")
+    //     this.attachToColumn(taskGroup, nearestColumn);
+    //   }
+    // }
   
     attachToColumn(taskGroup, column) {
       lol(taskGroup + " " + column)
       this.attachedToColumn = column.attrs.id;
-      //id = this.id
       state.find(id => id = element => {
         element.objectData.attachedToColumn = column.attrs.id;
       });
@@ -329,7 +357,6 @@ class ColumnManager {
       }
     }
 
-    /// FIXED: Position Change correction, as adding columns brings the tasks to wrong positions. ///
     resize_nodes(oldColWidth, columnWidth) {
         const all_notes = NotesLayer.find('.note')
         lol(all_notes)
@@ -360,7 +387,6 @@ class ColumnManager {
         NotesLayer.draw()
     };
 
-    /// FIXME: It has a general problem (maybe with x).  I somehow works now but in unexpected ways. ///
     tasksToTop() {
       var r = 44
       var current_group = ([])
@@ -405,290 +431,8 @@ class ColumnManager {
 const notes = new Note()
 
 const addTask = (title = textarea.value, value = "no value", color = color_pick.value = document.querySelector('#color_pick').value) => {
-      notes.createNote(title, value, 10, 400, color);
-  };
-
-
-// class Guide {
-//     constructor() {
-//         this.guide = new Konva.Line({
-//             stroke: 'red',
-//             strokeWidth: 2,
-//             lineCap: 'round',
-//             lineJoin: 'round',
-//             globalCompositeOperation: 'source-over',
-//             dash: [10, 10],
-//             dashOffset: 0,
-//             opacity: 0.5,
-//             name: 'guide',
-//             draggable: false,
-//             visible: false,
-//         });
-//         this.guide.on('mouseover', () => {
-//             this.guide.show();
-//         });
-//         this.guide.on('mouseout', () => {
-//             this.guide.hide();
-//         });
-//     }
-
-//     initGuideManager() {
-//       const SnapManager = {
-//           snapTo: function(shape, skipShape) {
-//               var stops = getLineGuideStops(skipShape);
-//               var closest = getClosestLineGuideStop(shape, stops);
-//               var snapTo = getSnapTo(shape, closest);
-//               return snapTo;
-//           }
-//       }}
-    
-//   // were can we snap our objects?
-//     getLineGuideStops(skipShape) {
-//       guideItem = []
-//       // we can snap to stage borders and the center of the stage
-//       var vertical = [0, stage.width() / 2, stage.width()];
-//       var horizontal = [0, stage.height() / 2, stage.height()];
-
-//       const childs = stage.getChildren()
-//       childs.forEach(child => {
-//           const children = child.getChildren()
-//           children.forEach((guideItem) => {
-//               if (guideItem === skipShape) {
-//                   return;
-//                 }
-//                 var box = guideItem.getClientRect();
-//                 // and we can snap to all edges of shapes
-//               if (guideItem.name() === 'column') {
-//                   vertical.push([box.x + box.width-1, box.x + box.width / 2]);
-//                 horizontal.push([box.y, box.y + box.height, box.y + box.height / 2]);
-//                 return;
-//               }
-//                 horizontal.push([box.y, box.y + box.height, box.y + box.height / 2]);
-//               });
-              
-//           });
-//           const texthigh = stage.findOne('.textrec');
-//           const y = texthigh.getAbsolutePosition().y
-//           horizontal.push([y + texthigh.height()])
-//           //lol(vertical)
-//           return {
-//               vertical: vertical.flat(),
-//               horizontal: horizontal.flat(),
-//           };
-//       };
-//     // what points of the object will trigger to snapping?
-//     // enables snapping horizontally all edges and center and Vertically just end
-//     getObjectSnappingEdges(node) {
-//       var box = node.getClientRect();
-//       var absPos = node.absolutePosition();
-
-//       return {
-//         vertical: [
-//           /*{
-//             guide: Math.round(box.x),
-//             offset: Math.round(absPos.x - box.x),
-//             snap: 'start',
-//           },
-//           {
-//             guide: Math.round(box.x + box.width / 2),
-//             offset: Math.round(absPos.x - box.x - box.width / 2),
-//             snap: 'center',
-//           },*/
-//           {
-//             guide: Math.round(box.x + box.width),
-//             offset: Math.round(absPos.x - box.x - box.width),
-//             snap: 'end',
-//           },
-//         ],
-//         horizontal: [
-//           {
-//             guide: Math.round(box.y),
-//             offset: Math.round(absPos.y - box.y),
-//             snap: 'start',
-//           },
-//           {
-//             guide: Math.round(box.y + box.height / 2),
-//             offset: Math.round(absPos.y - box.y - box.height / 2),
-//             snap: 'center',
-//           },
-//           {
-//             guide: Math.round(box.y + box.height),
-//             offset: Math.round(absPos.y - box.y - box.height),
-//             snap: 'end',
-//           },
-//         ],
-//       };
-//     }
-
-//     // find all snapping possibilities
-//     getGuides(lineGuideStops, itemBounds) {
-//       var resultV = [];
-//       var resultH = [];
-
-//       lineGuideStops.vertical.forEach((lineGuide) => {
-//         itemBounds.vertical.forEach((itemBound) => {
-//           var diff = Math.abs(lineGuide - itemBound.guide);
-//           // if the distance between guild line and object snap point is close we can consider this for snapping
-//           if (diff < 10) {
-//             resultV.push({
-//               lineGuide: lineGuide,
-//               diff: diff,
-//               snap: itemBound.snap,
-//               offset: itemBound.offset,
-//             });
-//           }
-//         });
-//       });
-
-//       lineGuideStops.horizontal.forEach((lineGuide) => {
-//         itemBounds.horizontal.forEach((itemBound) => {
-//           var diff = Math.abs(lineGuide - itemBound.guide);
-//           if (diff < 10) {
-//             resultH.push({
-//               lineGuide: lineGuide,
-//               diff: diff,
-//               snap: itemBound.snap,
-//               offset: itemBound.offset,
-//             });
-//           }
-//         });
-//       });
-
-//       var guides = [];
-
-//       // find closest snap
-//       var minV = resultV.sort((a, b) => a.diff - b.diff)[0];
-//       var minH = resultH.sort((a, b) => a.diff - b.diff)[0];
-//       if (minV) {
-//         guides.push({
-//           lineGuide: minV.lineGuide,
-//           offset: minV.offset,
-//           orientation: 'V',
-//           snap: minV.snap,
-//         });
-//       }
-//       if (minH) {
-//         guides.push({
-//           lineGuide: minH.lineGuide,
-//           offset: minH.offset,
-//           orientation: 'H',
-//           snap: minH.snap,
-//         });
-//       }
-//       return guides;
-//     }
-
-//     drawGuides(guides) {
-//       guides.forEach((lg) => {
-//         if (lg.orientation === 'H') {
-//           var line = new Konva.Line({
-//             points: [-6000, 0, 6000, 0],
-//             stroke: 'rgb(0, 161, 255)',
-//             strokeWidth: 1,
-//             name: 'guid-line',
-//             dash: [4, 6],
-//           });
-//           ColumnLayer.add(line);
-//           line.absolutePosition({
-//             x: 0,
-//             y: lg.lineGuide,
-//           });
-//         } else if (lg.orientation === 'V') {
-//           var line = new Konva.Line({
-//             points: [0, -6000, 0, 6000],
-//             stroke: 'rgb(0, 161, 255)',
-//             strokeWidth: 1,
-//             name: 'guid-line',
-//             dash: [4, 6],
-//           });
-//           ColumnLayer.add(line);
-//           line.absolutePosition({
-//             x: lg.lineGuide,
-//             y: 0,
-//           });
-//         }
-//       });
-//     }
-
-//     ColumnLayer.on('dragmove', function (e) {
-//       // clear all previous lines on the screen
-//       ColumnLayer.find('.guid-line').forEach((l) => l.destroy());
-//       NotesLayer.find('.guid-line').forEach((l) => l.destroy());
-
-//       // find possible snapping lines
-//       var lineGuideStops = getLineGuideStops(e.target);
-//       // find snapping points of current object
-//       var itemBounds = getObjectSnappingEdges(e.target);
-
-//       // now find where can we snap current object
-//       var guides = getGuides(lineGuideStops, itemBounds);
-
-//       // do nothing of no snapping
-//       if (!guides.length) {
-//         return;
-//       }
-
-//       drawGuides(guides);
-
-//       var absPos = e.target.absolutePosition();
-//       // now force object position
-//       guides.forEach((lg) => {
-//         switch (lg.orientation) {
-//           case 'V': {
-//             absPos.x = lg.lineGuide + lg.offset;
-//             break;
-//           }
-//           case 'H': {
-//             absPos.y = lg.lineGuide + lg.offset;
-//             break;
-//           }
-//         }
-//       });
-//       e.target.absolutePosition(absPos);
-//     });
-
-//     NotesLayer.on('dragmove', function (e) {
-//       // clear all previous lines on the screen
-//       NotesLayer.find('.guid-line').forEach((l) => l.destroy());
-//       ColumnLayer.find('.guid-line').forEach((l) => l.destroy());
-
-//       // find possible snapping lines
-//       var lineGuideStops = getLineGuideStops(e.target);
-//       // find snapping points of current object
-//       var itemBounds = getObjectSnappingEdges(e.target);
-
-//       // now find where can we snap current object
-//       var guides = getGuides(lineGuideStops, itemBounds);
-
-//       // do nothing of no snapping
-//       if (!guides.length) {
-//         return;
-//       }
-
-//       drawGuides(guides);
-
-//       var absPos = e.target.absolutePosition();
-//       // now force object position
-//       guides.forEach((lg) => {
-//         switch (lg.orientation) {
-//           case 'V': {
-//             absPos.x = lg.lineGuide + lg.offset;
-//             break;
-//           }
-//           case 'H': {
-//             absPos.y = lg.lineGuide + lg.offset;
-//             break;
-//           }
-//         }
-//       });
-//       e.target.absolutePosition(absPos);
-//     });
-
-//     NotesLayer.on('dragend', function (e) {
-//       // clear all previous lines on the screen
-//       ColumnLayer.find('.guid-line').forEach((l) => l.destroy());
-//     });
-// }
+    notes.createNote(title, value, 10, 400, color);
+};
 
 const SnapManager = {
   getLineGuideStops(skipShape) {
@@ -812,4 +556,4 @@ NotesLayer.on('dragmove', function (e) {
 
 NotesLayer.on('dragend', function (event) {
     GuideLayer.destroyChildren();
-  });
+});
