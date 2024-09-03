@@ -19,7 +19,7 @@
         <div class="top-left">
             <img id="Image" src="img/Logo_UniTrier.svg" alt="Trier University Logo" style="width: 200px; margin: 40px; min-width:30mm"></img>
             <div class="topgoru">
-                <div class="topgoru-left">
+                <div class="topgoru-left goru">
                     <!-- <button it="danger" class="btn btn-outline-danger">Danger</button> -->
                     <button onclick="addColumn()">Add Column</button>
                     <button onclick="addTask()">Create Note</button>
@@ -31,24 +31,23 @@
                     <div data-mynumber="2">Test 2</div>
                 </div>
             
-                <div class="topgoru-right">
-                    <div class='plusElement btn null' onclick='saveBoardState()' id='addnote-${column.id}'>+</div>
+                <div class="topgoru-right goru">
                     <input id="textarea" type="text" placeholder="Add a title...">
-                    <input id="color_pick" type="color">
+                    <input id="color_pick" type="color" name="colorpicker" value="#ffffff">
                     <button onclick="notes.tasksToTop()">bring to top</button>
+                    <div class='plusElement btn null' onclick='saveBoardState()' id='addnote-${column.id}'>+</div>
                 </div>
-                <div class="topgoru-selector">
-                    <input id="backup-requestID">
+                <div class="topgoru-selector goru">
+                    <input id="backup-requestID" placeholder="Note ID" type="number" value="">
                     <button id="startButton">Start</button>
                 </div>
             </div>
         </div>
-        <div class="llll">
+        <div class="top-right">
             <div class="NeueTasksGehege">
                 <div class="retzhuj">
                     <div>
-                        <h2>Tasks</h2>
-                        
+                        <h2 id="sectiontitle">Tasks</h2>
                         <div id="searchbar">
                         <!-- /// TODO: Add search bar with dropdown ///
                         /* Tickets, Wiki, Aufgaben, etc. */ -->

@@ -29,6 +29,8 @@ async function start() {
 					case null:
 						console.error("No data:", data);
 						break;
+					case "ZXd":
+						enddata = JSON.parse(atob(atob(data.json)));
 					case "ewo":
 						enddata = JSON.parse(atob(data.json));
 						break;

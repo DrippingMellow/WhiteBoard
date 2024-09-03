@@ -29,12 +29,75 @@ body {
     max-width: 100%;
     flex-wrap: nowrap;
 }
+#searchbar{
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    button{
+        border-radius: 10px;
+        border-style: solid;
+        border-color: rgb(255, 255, 255);
+        border-width: 2px;
+        background-color: rgb(255, 255, 255);
+        max-width: 100%;
+        max-height: 100%;
+        scrollbar-width: auto;
+        text-wrap: nowrap;
+    }
+    #searchbar-left{
+        display: flex;
+        flex-direction: row;
+        max-width: 100%;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        button{
+            display: flex;
+            width: -webkit-fill-available;
+            width: -moz-available;
+        }
+    }
+    #searchbar-right{
+        display: flex;
+        flex-direction: row;
+        max-width: 100%;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        button{
+            display: flex;
+            width: -webkit-fill-available;
+            width: -moz-available;
+        }
+    }
+}
+#secret {
+    display: none !important;
+}
+
+.btn {
+    /* Remove margin, padding and border */
+}
 
 .topgoru{
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     position: relative;
+    border-radius: 10px;
+    background-color: rgb(0, 140, 255);
+    width: 100%;
+    border-width: 4px;
+    border-style: solid;
+    div.goru{
+        display: flex;
+        border-radius: 10px;
+        border-color: hsla(0, 0%, 100%, 0.5);
+        border-width: 5px;
+        padding: 5px;
+        border-style: solid;
+        background-color: rgb(224, 204, 204);
+    }
     button{
         border-radius: 10px;
         border-style: solid;
@@ -60,28 +123,22 @@ body {
     }
     #secret{
         max-width: 100%;
-        display: flex;
+        display: none;
         flex-wrap: nowrap;
         position: relative;
         left: 0px;
         top: 0px;
-        /* border-style: solid;
-        border-radius: 10px;
-        border-color: rgb(255, 255, 255);
-        border-width: 1px;
-        background-color: rgb(255, 255, 255); */
     }
     .topgoru-right{
         max-width: 100%;
         display: flex;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         #textarea{
-            /*border-radius: 10px;*/
+            border-radius: 10px;
             border-style: solid;
-            border-color: rgb(255, 255, 255);
+            border-color: rgb(0, 0, 0);
             border-width: 2px;
             background-color: rgb(255, 255, 255);
-            width: fit-content();
             width: 100%;
             max-height: 100%;
             resize: none;
@@ -115,8 +172,41 @@ body {
             transform:  translateY(-25px);
         }
     }
+    .topgoru-selector{
+        display: flex;
+        border-radius: 10px;
+        background: aliceblue;
+        padding: 5px;
+        border-style: solid;
+        border-color: rgb(255, 255, 255);
+        border-width: 2px;
+        background-color: rgb(255, 255, 255);
+        #backup-requestID{
+            display: flex;
+            border-radius: 10px;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        button{
+            border-radius: 10px;
+            border-style: solid;
+            border-color: rgb(0, 0, 0);
+            border-width: 2px;
+            background-color: rgb(255, 255, 255);
+            max-width: 100%;
+            max-height: 100%;
+            overflow: visible;
+            overflow-y: visible;
+            overflow-x: visible;
+            scrollbar-width: auto;
+            text-wrap: nowrap;
+            transition: 1s;
+            
+        }
+    }
+    
 }
-.llll{
+.top-right{
     padding-left: 10px;
     margin-left:  10px;
     display: flex;

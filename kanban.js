@@ -7,11 +7,11 @@ const stage = new Konva.Stage({
 globalThis.columns = []
 const ColumnLayer = new Konva.Layer();
 const NotesLayer = new Konva.Layer();
-const layerguide = new Konva.Layer();
+const GuideLayer = new Konva.Layer();
 //const state = []
 stage.add(ColumnLayer);
 stage.add(NotesLayer);
-stage.add(layerguide)
+stage.add(GuideLayer)
 stage.on('')
 // if (d == null){
   
@@ -239,16 +239,14 @@ class ColumnManager {
         var stageBox = stage.container().getBoundingClientRect();
         TaskTextEditor(local_parent, note.titleText, stageBox, 'title', note.rect);
       });
-
       note.group.on('dragmove', () => {
         this.checkAttachment(note.group);
+        this.clearHoverTimer();
       });
-
       //Add hover functionality
       note.group.on('mouseenter', () => {
         this.startHoverTimer(note.group);
       });
-
       note.group.on('mouseleave', () => {
         this.clearHoverTimer();
       });
@@ -257,10 +255,11 @@ class ColumnManager {
 
     /// TODO: Column should change the color, when the task is dragged over it, to show that it is about to be attached ///
     startHoverTimer(taskGroup) {
+      lol("start")
       this.clearHoverTimer();
       this.hoverTimer = setTimeout(() => {
         this.attachToNearestColumn(taskGroup);
-      }, 2500); // Hover for 1 second before attaching
+      }, 1000); // Hover for 1 second before attaching
     }
   
     clearHoverTimer() {
@@ -408,10 +407,6 @@ const notes = new Note()
 const addTask = (title = textarea.value, value = "no value", color = color_pick.value = document.querySelector('#color_pick').value) => {
       notes.createNote(title, value, 10, 400, color);
   };
-
-// function addTask(title=textarea.value, value="no value", color = document.querySelector('#color_pick').value) {
-//     notes.createNote(title, value, 10, 400, color);
-// }
 
 
 // class Guide {
@@ -695,76 +690,126 @@ const addTask = (title = textarea.value, value = "no value", color = color_pick.
 //     });
 // }
 
-// const SnapManager = {
-//   getLineGuideStops(skipShape) {
-//     const vertical = [0, stage.width() / 2, stage.width()];
-//     const horizontal = [0, stage.height() / 2, stage.height()];
+const SnapManager = {
+  getLineGuideStops(skipShape) {
+    const vertical = [0, stage.width() / 2, stage.width()];
+    const horizontal = [0, stage.height() / 2, stage.height()];
 
-//     stage.children.forEach(layer => {
-//       layer.children.forEach(guideItem => {
-//         if (guideItem === skipShape) return;
+    stage.children.forEach(layer => {
+      layer.children.forEach(guideItem => {
+        if (guideItem === skipShape) return;
         
-//         const box = guideItem.getClientRect();
-//         if (guideItem.name() === 'column') {
-//           vertical.push(box.x + box.width - 1, box.x + box.width / 2);
-//           horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
-//         } else {
-//           horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
-//         }
-//       });
-//     });
+        const box = guideItem.getClientRect();
+        if (guideItem.name() === 'column') {
+          vertical.push(box.x + box.width - 1, box.x + box.width / 2);
+          horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
+        } else {
+          horizontal.push(box.y, box.y + box.height, box.y + box.height / 2);
+        }
+      });
+    });
 
-//     const texthigh = stage.findOne('.textrec');
-//     horizontal.push(texthigh.getAbsolutePosition().y + texthigh.height());
+    const texthigh = stage.findOne('.textrec');
+    horizontal.push(texthigh.getAbsolutePosition().y + texthigh.height());
 
-//     return { vertical: vertical.flat(), horizontal: horizontal.flat() };
-//   },
+    return { vertical: vertical.flat(), horizontal: horizontal.flat() };
+  },
 
-//   getObjectSnappingEdges(node) {
-//     const box = node.getClientRect();
-//     const absPos = node.absolutePosition();
+  getObjectSnappingEdges(node) {
+    const box = node.getClientRect();
+    const absPos = node.absolutePosition();
 
-//     return {
-//       vertical: [
-//         { guide: box.x + box.width, offset: absPos.x - box.x - box.width, snap: 'end' }
-//       ],
-//       horizontal: [
-//         { guide: box.y, offset: absPos.y - box.y, snap: 'start' },
-//         { guide: box.y + box.height / 2, offset: absPos.y - box.y - box.height / 2, snap: 'center' },
-//         { guide: box.y + box.height, offset: absPos.y - box.y - box.height, snap: 'end' }
-//       ]
-//     };
-//   },
+    return {
+      vertical: [
+        { guide: box.x + box.width, offset: absPos.x - box.x - box.width, snap: 'end' }
+      ],
+      horizontal: [
+        { guide: box.y, offset: absPos.y - box.y, snap: 'start' },
+        { guide: box.y + box.height / 2, offset: absPos.y - box.y - box.height / 2, snap: 'center' },
+        { guide: box.y + box.height, offset: absPos.y - box.y - box.height, snap: 'end' }
+      ]
+    };
+  },
 
-//   getGuides(lineGuideStops, itemBounds) {
-//     const resultV = [];
-//     const resultH = [];
+  getGuides(lineGuideStops, itemBounds) {
+    const resultV = [];
+    const resultH = [];
 
-//     lineGuideStops.vertical.forEach(lineGuide => {
-//       itemBounds.vertical.forEach(itemBound => {
-//         const diff = Math.abs(lineGuide - itemBound.guide);
-//         if (diff < 10) {
-//           resultV.push({ lineGuide, diff, snap: itemBound.snap, offset: itemBound.offset });
-//         }
-//       });
-//     });
+    lineGuideStops.vertical.forEach(lineGuide => {
+      itemBounds.vertical.forEach(itemBound => {
+        const diff = Math.abs(lineGuide - itemBound.guide);
+        if (diff < 10) {
+          resultV.push({ lineGuide, diff, snap: itemBound.snap, offset: itemBound.offset });
+        }
+      });
+    });
 
-//     lineGuideStops.horizontal.forEach(lineGuide => {
-//       itemBounds.horizontal.forEach(itemBound => {
-//         const diff = Math.abs(lineGuide - itemBound.guide);
-//         if (diff < 10) {
-//           resultH.push({ lineGuide, diff, snap: itemBound.snap, offset: itemBound.offset });
-//         }
-//       });
-//     });
+    lineGuideStops.horizontal.forEach(lineGuide => {
+      itemBounds.horizontal.forEach(itemBound => {
+        const diff = Math.abs(lineGuide - itemBound.guide);
+        if (diff < 10) {
+          resultH.push({ lineGuide, diff, snap: itemBound.snap, offset: itemBound.offset });
+        }
+      });
+    });
 
-//     const guides = [];
-//     const minV = resultV.sort((a, b) => a.diff - b.diff)[0];
-//     const minH = resultH.sort((a, b) => a.diff - b.diff)[0];
+    const guides = [];
+    const minV = resultV.sort((a, b) => a.diff - b.diff)[0];
+    const minH = resultH.sort((a, b) => a.diff - b.diff)[0];
 
-//     if (minV) guides.push({ ...minV, orientation: 'V' });
-//     if (minH) guides.push({ ...minH, orientation: 'H' });
+    if (minV) guides.push({ ...minV, orientation: 'V' });
+    if (minH) guides.push({ ...minH, orientation: 'H' });
 
-//     return guides;
-//   }
-// };
+    return guides;
+  }
+};
+
+NotesLayer.on('dragmove', function (e) {
+  const guides = SnapManager.getGuides(
+    SnapManager.getLineGuideStops(e.target),
+    SnapManager.getObjectSnappingEdges(e.target)
+  );
+
+  if (guides.length === 0) {
+    GuideLayer.destroyChildren();
+    return;
+  }
+
+  const lines = guides.map(guide => {
+    const line = new Konva.Line({
+      points: guide.orientation === 'H' ? [-6000, 0, 6000, 0] : [0, -6000, 0, 6000],
+      stroke: 'rgb(0, 161, 255)',
+      strokeWidth: 1,
+      name: 'guid-line',
+      dash: [4, 6],
+    });
+
+    line.absolutePosition({
+      x: guide.orientation === 'H' ? 0 : guide.lineGuide,
+      y: guide.orientation === 'V' ? 0 : guide.lineGuide,
+    });
+
+    return line;
+  });
+
+  GuideLayer.children = lines;
+  GuideLayer.batchDraw();
+  const absPos = e.target.absolutePosition();
+  guides.forEach((guide) => {
+    switch (guide.orientation) {
+      case 'V': {
+        absPos.x = guide.lineGuide + guide.offset;
+        break;
+      }
+      case 'H': {
+        absPos.y = guide.lineGuide + guide.offset;
+        break;
+      }
+    }
+  });
+  e.target.absolutePosition(absPos);
+});
+
+NotesLayer.on('dragend', function (event) {
+    GuideLayer.destroyChildren();
+  });
