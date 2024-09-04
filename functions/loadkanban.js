@@ -13,10 +13,11 @@ async function loadkanban(d) {
 
 	d.nodes.forEach(async (node) => {
 		let obj = node.objectData;
+		lol(obj)
 			//notes.createNote(obj.title, obj.text, (obj.cords[0] || obj.cords.x), (obj.cords[1] || obj.cords.y), obj.color)
 			// Calculate actual positions from percentages
-			let x = (obj.coordinates.xPercent * stage.width()) || obj.cords[0] || obj.cords.x;
-			let y = (obj.coordinates.yPercent * stage.height()) || obj.cords[1];
+			let x = (obj.coordinates.xPercent * stage.width()) || obj.x;
+			let y = (obj.coordinates.yPercent * stage.height()) || obj.y;
 			console.log(x);
 			const note = notes.createNote(obj.title, obj.text, x, y, obj.color, obj.attachedToColumn);			
 	})

@@ -72,22 +72,28 @@ function selector() {
     selector.vale
 }
 
-document.addEventListener("DOMContentLoaded", () => { 
-    try {
-        start();
-        displayTickets();
-        setupMenu();
-    } catch (error) {
-        console.error("An error occurred:", error);
-    } 
-    const startButton = document.getElementById('startButton');
-    startButton.addEventListener('click', () => {
-        requestId = document.getElementById('backup-requestID').value
+document.addEventListener("DOMContentLoaded", () => {
+    const startup = () => {
         try {
             start();
             displayTickets();
             setupMenu();
         } catch (error) {
             console.error("An error occurred:", error);
-        }});
+        };
+    }
+    const startButton = document.getElementById('startButton');
+    const backupId = document.getElementById('backup-requestID');
+    if (requestId !== null) {
+        startButton.style.display = 'none';
+        backupId.parentElement.style.display = 'none';
+        startup();
+        
+    } else {
+        startButton.style.display = 'block';
+        startButton.addEventListener('click', () => {
+            requestId = backupId.value;
+            startup();
+        })
+    } 
 });

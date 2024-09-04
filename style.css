@@ -89,6 +89,20 @@ body {
     width: 100%;
     border-width: 4px;
     border-style: solid;
+    #textarea{
+        border-radius: 10px;
+        border-style: solid;
+        border-color: rgb(0, 0, 0);
+        border-width: 2px;
+        background-color: rgb(255, 255, 255);
+        width: 100%;
+        max-height: 100%;
+        resize: none;
+        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: auto;
+    }
     div.goru{
         display: flex;
         border-radius: 10px;
@@ -133,20 +147,6 @@ body {
         max-width: 100%;
         display: flex;
         flex-wrap: wrap;
-        #textarea{
-            border-radius: 10px;
-            border-style: solid;
-            border-color: rgb(0, 0, 0);
-            border-width: 2px;
-            background-color: rgb(255, 255, 255);
-            width: 100%;
-            max-height: 100%;
-            resize: none;
-            overflow: hidden;
-            overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: auto;
-        }
         button{
             border-radius: 10px;
             border-style: solid;
@@ -180,11 +180,11 @@ body {
         border-color: rgb(255, 255, 255);
         border-width: 2px;
         background-color: rgb(255, 255, 255);
+        justify-content: space-evenly;
         #backup-requestID{
             display: flex;
             border-radius: 10px;
             flex-direction: row;
-            justify-content: space-between;
         }
         button{
             border-radius: 10px;

@@ -1,12 +1,10 @@
-
+//sendBoard.js
 
 /**
- * Send the board to save
+ * Send the board to save on the database
  *
  * @param {JSON} boarditems - Is a with 64 decoded JSon.
  */
-
-
 async function sendBoard(boarditems, requestURL) {
 	$.ajax({
 		type: "PUT",
@@ -94,7 +92,9 @@ function save_state_change(value, type) {
 	switch (type) {
 		case "position":
 			console.log(pos)
-			node.objectData.cords = pos
+			//node.objectData.cords = pos
+			node.objectData.x = pos.x
+			node.objectData.y = pos.y
 			break;
 		case "color":
 			node.objectData.color = pos

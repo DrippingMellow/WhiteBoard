@@ -17,7 +17,6 @@ function TaskTextEditor(parent, textbox, stageBox, type, taskRect) {
     switch (type) {
         case "title":
             textelement = 'input';
-
             createTextEditor(parent, textelement, stageBox, textbox, type, 0, taskRect);
             break;
         case "description":
@@ -61,7 +60,7 @@ function createTextEditor(parent, b , stageBox, textBox, type, a = 0 , taskRect)
     textEditor.value = textBox.text();
     /// FIXME: The text box is placed at a wrong position vertically
     textEditor
-        .setPosition(type === 'title' ? 22 : areaPosition.x, areaPosition.y)
+        .setPosition(type === 'title' ? 22 : areaPosition.x, areaPosition.y+22)
         .setWidth(taskRect.width())
         .setHeight(type === 'title' ? 22 : taskRect.height() - 22);
 
@@ -73,7 +72,7 @@ function createTextEditor(parent, b , stageBox, textBox, type, a = 0 , taskRect)
             textBox.text(textEditor.value);
             document.body.removeChild(textEditor);
             if (type === 'description') {
-                taskRect.height(textBox.height() + parent.height());
+                taskRect.height(textBox.height()+ 22 + textEditor.height());
                 if (taskRect.height() >= 250) {
                     textBox.height(230)
                     taskRect.height(textBox.height()+22)

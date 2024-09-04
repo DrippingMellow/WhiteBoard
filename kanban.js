@@ -211,7 +211,6 @@ class ColumnManager {
         this.startHoverTimer(note.group);
       });
       note.group.on('dragend', () => {
-        //this.handleDragInteraction(note.group, 'dragend');
         channel2.postMessage("dragend");
         const nodeId = note.group.id();
         const positi_on = note.group.getAbsolutePosition();
@@ -247,23 +246,32 @@ class ColumnManager {
         TaskTextEditor(local_parent, note.titleText, stageBox, 'title', note.rect);
       });
       note.group.on('dragmove', () => {
-        this.handleDragInteraction(note.group, 'dragmove');
+        //this.handleDragInteraction(note.group, 'dragmove');
         channel2.postMessage("position changed");
       });
       return note.group;
     };
-    startHoverTimer(taskGroup) {
+    async startHoverTimer(taskGroupe) {
       this.clearHoverTimer();
-
+      let taskGroup = taskGroupe;
       let nearestColumn = null;
       let originalFill = null;
+      let isFullyHighlighted = false;
 
-      const highlightColumn = () => {
+      const preHighlightColumn = () => {
         nearestColumn = this.getNearestColumn(taskGroup);
-        if (nearestColumn) {
+        if (nearestColumn && !isFullyHighlighted) {
           originalFill = nearestColumn.getChildren()[1].fill();
-          nearestColumn.getChildren()[1].fill("#f00");
+          nearestColumn.getChildren()[1].fill("#ffcccc"); // Light red for pre-highlight
           ColumnLayer.draw();
+        }
+      };
+
+      const fullHighlightColumn = () => {
+        if (nearestColumn) {
+          nearestColumn.getChildren()[1].fill("#ff0000"); // Bright red for full highlight
+          ColumnLayer.draw();
+          isFullyHighlighted = true;
         }
       };
 
@@ -271,41 +279,52 @@ class ColumnManager {
         if (nearestColumn) {
           nearestColumn.getChildren()[1].fill(originalFill);
           ColumnLayer.draw();
+          isFullyHighlighted = false;
         }
       };
 
-      highlightColumn(); // Immediately highlight the nearest column
-
-      this.hoverTimer = setInterval(() => {
+      this.hoverTimer = setTimeout(() => {
         resetHighlight();
-        highlightColumn();
-      }, 100); // Re-highlight every 100ms during movement
+        preHighlightColumn();
+      }, 250); // Re-highlight every 100ms during movement
+
+      this.fullHighlightTimer = setTimeout(() => {
+        fullHighlightColumn();
+      }, 2000); // Full highlight after 2 seconds of hovering
 
       channel1.onmessage = (e) => {
         if (e.data === "dragend") {
-          clearInterval(this.hoverTimer);
-          if (nearestColumn) {
+          clearTimeout(this.hoverTimer);
+          clearTimeout(this.fullHighlightTimer);
+          if (isFullyHighlighted == true) {
             this.attachToColumn(taskGroup, nearestColumn);
-            resetHighlight();
           }
-        } else if (e.data === "position changed") {
           resetHighlight();
-          highlightColumn();
+        } else if (e.data === "position changed") {
+          clearTimeout(this.fullHighlightTimer);
+          resetHighlight();
+          preHighlightColumn();
+          this.fullHighlightTimer = setTimeout(() => {
+            fullHighlightColumn();
+          }, 2000);
         }
       };
     }
 
     clearHoverTimer() {
       if (this.hoverTimer) {
-        clearInterval(this.hoverTimer);
+        clearTimeout(this.hoverTimer);
         this.hoverTimer = null;
+      }
+      if (this.fullHighlightTimer) {
+        clearTimeout(this.fullHighlightTimer);
+        this.fullHighlightTimer = null;
       }
       ColumnLayer.find('.column').forEach(column => {
         column.getChildren()[1].fill("#dddddda6");
       });
       ColumnLayer.draw();
-    }
-    getNearestColumn(taskGroup) {
+    }    getNearestColumn(taskGroup) {
       const columns = ColumnLayer.find('.column');
       let nearestColumn = null;
       let minDistance = Infinity;
@@ -407,6 +426,7 @@ class ColumnManager {
           object.position({x: object.x(), y: r})
           r = r + child.height()
           lol(r)
+          save_state_change([object.id(), object.position()], "position")
         })
     };
     /// FIXME: It filters out the tasks that has to be removed, but it doesn't remove it. ///
