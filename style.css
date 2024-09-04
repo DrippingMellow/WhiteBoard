@@ -1,85 +1,76 @@
-:root{
-    --defining-color:rgb(102,175,219);
+:root {
+    --defining-color: rgb(102, 175, 219);
 }
 
-.button {color: red;}
 body {
     height: auto;
     background-color: rgb(204, 228, 243);
-    overflow:visible;
+    overflow: visible;
 }
 
-#scroll-container{
+#scroll-container {
     border-top-style: solid;
     overflow: visible;
     overflow-y: auto;
     scrollbar-width: auto;
-    overflow-x:visible;
+    overflow-x: visible;
     display: flex;
-    height:75dvh;
+    height: 75dvh;
 }
 
 #container {
     height: 100vh;
     scale: 1;
 }
+
 .top {
     display: flex;
     flex-direction: row;
     max-width: 100%;
     flex-wrap: nowrap;
 }
-#searchbar{
+#searchbar {
     display: flex;
     flex-direction: row;
     max-width: 100%;
     flex-wrap: nowrap;
     justify-content: space-between;
-    button{
-        border-radius: 10px;
-        border-style: solid;
-        border-color: rgb(255, 255, 255);
-        border-width: 2px;
-        background-color: rgb(255, 255, 255);
-        max-width: 100%;
-        max-height: 100%;
-        scrollbar-width: auto;
-        text-wrap: nowrap;
-    }
-    #searchbar-left{
-        display: flex;
-        flex-direction: row;
-        max-width: 100%;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        button{
-            display: flex;
-            width: -webkit-fill-available;
-            width: -moz-available;
-        }
-    }
-    #searchbar-right{
-        display: flex;
-        flex-direction: row;
-        max-width: 100%;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        button{
-            display: flex;
-            width: -webkit-fill-available;
-            width: -moz-available;
-        }
-    }
 }
+#searchbar button {
+    border-radius: 10px;
+    border: 2px solid rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    max-width: 100%;
+    max-height: 100%;
+    scrollbar-width: auto;
+    text-wrap: nowrap;
+}
+
+#searchbar-left,
+#searchbar-right {
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+#searchbar-left button,
+#searchbar-right button {
+    display: flex;
+    width: -webkit-fill-available;
+    width: -moz-available;
+}
+
 #secret {
     display: none !important;
 }
 
-.btn {
-    /* Remove margin, padding and border */
+.separator {
+    border-bottom: 2px solid #00000055 !important;
 }
 
-.topgoru{
+.topgoru {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -87,141 +78,164 @@ body {
     border-radius: 10px;
     background-color: rgb(0, 140, 255);
     width: 100%;
-    border-width: 4px;
-    border-style: solid;
-    #textarea{
-        border-radius: 10px;
-        border-style: solid;
-        border-color: rgb(0, 0, 0);
-        border-width: 2px;
-        background-color: rgb(255, 255, 255);
-        width: 100%;
-        max-height: 100%;
-        resize: none;
-        overflow: hidden;
-        overflow-y: auto;
-        overflow-x: hidden;
-        scrollbar-width: auto;
-    }
-    div.goru{
-        display: flex;
-        border-radius: 10px;
-        border-color: hsla(0, 0%, 100%, 0.5);
-        border-width: 5px;
-        padding: 5px;
-        border-style: solid;
-        background-color: rgb(224, 204, 204);
-    }
-    button{
-        border-radius: 10px;
-        border-style: solid;
-        border-color: rgb(255, 255, 255);
-        border-width: 2px;
-        background-color: rgb(255, 255, 255);
-        max-width: 100%;
-        max-height: 100%;
-        scrollbar-width: auto;
-        text-wrap: nowrap;
-    }
-    .topgoru-left{
-        width: 100%;
-        max-width: 100%;
-        display: flex;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        button{
-            display: flex;
-            width: -webkit-fill-available;
-            width: -moz-available;
-        }
-    }
-    #secret{
-        max-width: 100%;
-        display: none;
-        flex-wrap: nowrap;
-        position: relative;
-        left: 0px;
-        top: 0px;
-    }
-    .topgoru-right{
-        max-width: 100%;
-        display: flex;
-        flex-wrap: wrap;
-        button{
-            border-radius: 10px;
-            border-style: solid;
-            border-color: rgb(255, 255, 255);
-            border-width: 2px;
-            background-color: rgb(255, 255, 255);
-            max-width: 100%;
-            max-height: 100%;
-            overflow: visible;
-            overflow-y: visible;
-            overflow-x: visible;
-            scrollbar-width: auto;
-            text-wrap: nowrap;
-            transition: 1s;
-        }
-        button:hover{
-            background-color: rgb(225, 242, 237);
-            border-color: rgb(255, 255, 255);
-            border-width: 2px;
-            border-style: solid;
-            border-radius: 10px;
-            transform:  translateY(-25px);
-        }
-    }
-    .topgoru-selector{
-        display: flex;
-        border-radius: 10px;
-        background: aliceblue;
-        padding: 5px;
-        border-style: solid;
-        border-color: rgb(255, 255, 255);
-        border-width: 2px;
-        background-color: rgb(255, 255, 255);
-        justify-content: space-evenly;
-        #backup-requestID{
-            display: flex;
-            border-radius: 10px;
-            flex-direction: row;
-        }
-        button{
-            border-radius: 10px;
-            border-style: solid;
-            border-color: rgb(0, 0, 0);
-            border-width: 2px;
-            background-color: rgb(255, 255, 255);
-            max-width: 100%;
-            max-height: 100%;
-            overflow: visible;
-            overflow-y: visible;
-            overflow-x: visible;
-            scrollbar-width: auto;
-            text-wrap: nowrap;
-            transition: 1s;
-        }
-    }
-    
+    border: 4px solid;
 }
-.top-right{
-    padding-left: 10px;
-    margin-left:  10px;
+
+.topgoru #textarea {
+    border-radius: 10px;
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    max-height: 100%;
+    resize: none;
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: auto;
+}
+
+.topgoru div.goru {
     display: flex;
-    top:0px;
+    flex-flow: row;
+    border-radius: 10px;
+    border: 5px solid hsla(0, 0%, 100%, 0.5);
+    padding: 5px;
+    background-color: rgb(224, 204, 204);
+    width: -webkit-fill-available;
+    width: -moz-available;
+    align-items: center;
+    align-content: center;
+    justify-content: space-evenly;
+}
+
+.topgoru div.goru div {
+    display: flex;
+    flex-direction: column;
+}
+
+.topgoru div.goru-secondary {
+    display: flex;
+    flex-flow: column wrap;
+    border: 5px solid hsla(0, 0%, 100%, 0.5);
+    background-color: rgb(224, 204, 204);
+    border-radius: 10px;
+}
+
+.topgoru div.goru-secondary div.goru {
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.topgoru button {
+    border-radius: 10px;
+    border: 2px solid rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    max-width: 100%;
+    max-height: 100%;
+    scrollbar-width: auto;
+    text-align: center;
+}
+
+.topgoru .topgoru-left {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.topgoru .topgoru-left button {
+    width: -webkit-fill-available;
+    width: -moz-available;
+}
+
+.topgoru #secret {
+    max-width: 100%;
+    display: none;
+    flex-wrap: nowrap;
+    position: relative;
+    left: 0;
+    top: 0;
+}
+
+.topgoru .topgoru-right {
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.topgoru .topgoru-right button {
+    border-radius: 10px;
+    border: 2px solid rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    max-width: 100%;
+    max-height: 100%;
+    overflow: visible;
+    scrollbar-width: auto;
+    text-wrap: nowrap;
+    transition: 1s;
+}
+
+.topgoru .topgoru-right button:hover {
+    background-color: rgb(225, 242, 237);
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 10px;
+    transform: translateY(-25px);
+}
+
+.topgoru .topgoru-selector {
+    display: flex;
+    border-radius: 10px;
+    background: aliceblue;
+    padding: 5px;
+    border: 2px solid rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
+    justify-content: space-evenly;
+}
+
+.topgoru .topgoru-selector #backup-requestID {
+    display: flex;
+    border-radius: 10px;
+    flex-direction: row;
+}
+
+.topgoru .topgoru-selector button {
+    border-radius: 10px;
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(255, 255, 255);
+    max-width: 100%;
+    max-height: 100%;
+    overflow: visible;
+    scrollbar-width: auto;
+    text-wrap: nowrap;
+    transition: 1s;
+}
+
+.top-right {
+    padding-left: 10px;
+    margin-left: 10px;
+    display: flex;
+    top: 0;
     position: relative;
     width: 100%;
-    div.NeueTasksGehege{
-        border-style: dashed;
-        border-radius: 10px;
-        width:inherit;
-        tbody{
-            border-radius: 25px;
-        }
-        overflow: hidden;
-    }
 }
-.NeueTasksGehege{
+
+.top-right div.NeueTasksGehege {
+    border-style: dashed;
+    border-radius: 10px;
+    width: inherit;
+    overflow: hidden;
+}
+
+.top-right div.NeueTasksGehege tbody {
+    border-radius: 25px;
+}
+
+.NeueTasksGehege {
     max-width: 100%;
     max-height: 100%;
     overflow-y: auto;
@@ -230,7 +244,8 @@ body {
     cursor: pointer;
     resize: vertical;
 }
-#tasks{
+
+#tasks {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -241,42 +256,43 @@ body {
     scrollbar-width: auto;
     cursor: pointer;
 }
+
 .ticket-container {
     display: flex;
     flex-flow: row wrap;
     border-radius: 10px;
-    border-style: solid;
-    border-color: rgb(255, 255, 255);
-    border-width: 2px;
+    border: 2px solid rgb(255, 255, 255);
     background-color: rgb(255, 255, 255);
-    width: fit-content();
-    height: min-content();
+    width: fit-content;
+    height: min-content;
     max-width: 100%;
-    max-height: min-content();
+    max-height: min-content;
     resize: none;
     overflow: hidden;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: auto;
     text-align: center;
-    div {
-        text-align: center;
-        height: min-content();
-    }
 }
+
+.ticket-container div {
+    text-align: center;
+    height: min-content;
+}
+
 .retzhuj {
     position: relative;
-    left: 0px;
-    border-bottom-style:solid;
+    left: 0;
+    border-bottom-style: solid;
     background-color: var(--defining-color);
-    div {
-        display: flex;
-        .searchbar{
-            border-radius: 10px;
-            border-style: solid;
-            border-color: rgb(255, 255, 255);
-            border-width: 2px;
-            background-color: rgb(255, 255, 255);
-        }
-    }
+}
+
+.retzhuj div {
+    display: flex;
+}
+
+.retzhuj div .searchbar {
+    border-radius: 10px;
+    border: 2px solid rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
 }

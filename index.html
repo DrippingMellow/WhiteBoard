@@ -27,22 +27,26 @@
             <div class="top-left">
                 <img id="Image" src="img/Logo_UniTrier.svg" alt="Trier University Logo" style="width: 200px; margin: 40px; min-width:30mm"></img>
                 <div class="topgoru">
-                    <div class="topgoru-left goru">
-                        <!-- <button it="danger" class="btn btn-outline-danger">Danger</button> -->
-                        <button onclick="addColumn()">Add Column</button>
-                        <button onclick="addTask()">Create Note</button>
-                        <button onclick="loadkanban()"></button>
-                        <button onclick="loadkanson()"></button>
+                    <div class="topgoru-left goru-secondary">
+                        
+                        <div class="goru separator">
+                            <input id="textarea" type="text" placeholder="Add a title...">
+                            <input id="color_pick" type="color" name="colorpicker" value="#ffffff">
+                        </div>
+                        <div class="goru">
+                            <button onclick="addColumn()">Add Column</button>
+                            <button onclick="addTask()">Create Note</button>
+                        </div>
                     </div>
                     <div id="secret">
                         <div id="mynumber" data-mynumber="1">Test 1</div>
                         <div data-mynumber="2">Test 2</div>
                     </div>
                     <div class="topgoru-right goru">
-                        <input id="textarea" type="text" placeholder="Add a title...">
-                        <input id="color_pick" type="color" name="colorpicker" value="#ffffff">
+                        <button onclick="loadkanban()"></button>
+                        <button onclick="loadkanson()"></button>
                         <button onclick="notes.tasksToTop()">bring to top</button>
-                        <i class="bi bi-save" onclick='saveBoardState()' id='addnote-${column.id}'></i>
+                        <button class="bi bi-save" onclick='saveBoardState()' id='addnote-${column.id}'></button>
                     </div>
                     <div class="topgoru-selector goru">
                         <input id="backup-requestID" placeholder="Note ID" type="number" value="">

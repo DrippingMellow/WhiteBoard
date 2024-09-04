@@ -6,7 +6,7 @@ globalThis.o = 0
 //var n = 0 //iterator for NoteID 
 let state = []
 globalThis: state  //Tasks 
-let requestId = 13 //ID for request
+let requestId = null //ID for request
 globalThis: requestId;
 const board = 0
 globalThis: board
