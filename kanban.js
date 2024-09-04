@@ -124,8 +124,7 @@ class ColumnManager {
   const columnManager = new ColumnManager();
   columnManager.initColumns();
 
-
-class Note {
+  class Note {
     constructor(title, text, x, y){
       this.title = title;
       this.text = text;
@@ -210,8 +209,9 @@ class Note {
       });
       note.group.on('dragstart', () => {
         this.startHoverTimer(note.group);
-      })
-      note.group.on('dragend', function(){
+      });
+      note.group.on('dragend', () => {
+        //this.handleDragInteraction(note.group, 'dragend');
         channel2.postMessage("dragend");
         const nodeId = note.group.id();
         const positi_on = note.group.getAbsolutePosition();
@@ -247,111 +247,64 @@ class Note {
         TaskTextEditor(local_parent, note.titleText, stageBox, 'title', note.rect);
       });
       note.group.on('dragmove', () => {
+        this.handleDragInteraction(note.group, 'dragmove');
         channel2.postMessage("position changed");
-      });
-      //Add hover functionality
-      note.group.on('mouseenter', () => {
-        //lol(note.group)
-        //this.startHoverTimer(note.group);
-        //this.hoverManager.start();
-      });
-      note.group.on('mouseleave', () => {
       });
       return note.group;
     };
-
     startHoverTimer(taskGroup) {
-      lol(x++)
-      const clear = this.clearHoverTimer();
-      let originalFill = null;
+      this.clearHoverTimer();
+
       let nearestColumn = null;
-      let doAttach = false;
-      lol(taskGroup);
-      if (this.checkAttachment(taskGroup) != null) {
-        return;
-      }
+      let originalFill = null;
 
-      
-      const timer = () => {
-        try {
-          
-          if (nearestColumn && taskGroup.attachedToColumn !== nearestColumn.attrs.id) {
-            throw new Error("nearestColumn is null");
-          }
-            
-            
-            nearestColumn = this.getNearestColumn(taskGroup);
-            console.log("Nearest column:", nearestColumn);
-            originalFill = nearestColumn.getChildren()[1].fill();
-            lol(nearestColumn)
-            nearestColumn.getChildren()[1].fill("#f00");
-            ColumnLayer.draw()
-            
-            channel1.onmessage = (e) => {
-              if (e.data == "position changed") {
-                lol("position changed");
-                nearestColumn.getChildren()[1].fill(originalFill);
-                doAttach = false;
-                return;
-              }
-            };
-            channel1.onmessage = (e) => {
-              if (e.data == "dragend") {
-                throw new Error("Dragend");
-              }
-            }
-
-          
-        } 
-        catch (error) {
-          switch (error.message) {
-            case "nearestColumn is null":
-              console.error("Nearest column is null");
-              break;
-            case "Dragend":
-              doAttach == true ? this.attachToColumn(taskGroup, nearestColumn) : null;
-              nearestColumn.getChildren()[1].fill(originalFill);
-              lol(taskGroup.attachedToColumn);
-              console.error("Dragend");
-              clearInterval(this.hoverInterval);
-              break; 
-            default:
-              console.error("Unknown error:", error);
-              break;
-          }
-        } finally {
-          if (doAttach == true) {
-            doAttach = false;
-          }
-          
-          return;
-        }};
-        this.hoverInterval = setInterval(timer, 1000);
-        while (this.hoverInterval !== null) {
-            this.hoverTimer = setTimeout(() => {
-                nearestColumn.getChildren()[1].fill("#f00");
-                ColumnLayer.draw()
-                doAttach = true;
-            }, 250);
-            
+      const highlightColumn = () => {
+        nearestColumn = this.getNearestColumn(taskGroup);
+        if (nearestColumn) {
+          originalFill = nearestColumn.getChildren()[1].fill();
+          nearestColumn.getChildren()[1].fill("#f00");
+          ColumnLayer.draw();
         }
-      //this.hoverInterval === null && this.hoverInterval.length > 1 ? this.hoverInterval = setInterval(timer, 500) : null;
+      };
+
+      const resetHighlight = () => {
+        if (nearestColumn) {
+          nearestColumn.getChildren()[1].fill(originalFill);
+          ColumnLayer.draw();
+        }
+      };
+
+      highlightColumn(); // Immediately highlight the nearest column
+
+      this.hoverTimer = setInterval(() => {
+        resetHighlight();
+        highlightColumn();
+      }, 100); // Re-highlight every 100ms during movement
+
+      channel1.onmessage = (e) => {
+        if (e.data === "dragend") {
+          clearInterval(this.hoverTimer);
+          if (nearestColumn) {
+            this.attachToColumn(taskGroup, nearestColumn);
+            resetHighlight();
+          }
+        } else if (e.data === "position changed") {
+          resetHighlight();
+          highlightColumn();
+        }
+      };
     }
+
     clearHoverTimer() {
-      lol("clear")
-      if (this.hoverInterval) {
-        clearInterval(this.hoverInterval);
-        this.hoverInterval = null;
-      }
       if (this.hoverTimer) {
-        clearTimeout(this.hoverTimer);
+        clearInterval(this.hoverTimer);
         this.hoverTimer = null;
       }
-      ColumnLayer.find('.column').fill("#dddddda6")
-      return;
+      ColumnLayer.find('.column').forEach(column => {
+        column.getChildren()[1].fill("#dddddda6");
+      });
+      ColumnLayer.draw();
     }
-
-
     getNearestColumn(taskGroup) {
       const columns = ColumnLayer.find('.column');
       let nearestColumn = null;
@@ -469,7 +422,6 @@ class Note {
     }
 
 }
-
 const notes = new Note()
 
 const addTask = (title = textarea.value, value = "no value", color = color_pick.value = document.querySelector('#color_pick').value) => {
