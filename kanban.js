@@ -13,6 +13,10 @@ stage.add(ColumnLayer);
 stage.add(NotesLayer);
 stage.add(GuideLayer)
 stage.on('')
+let messageChannel = new MessageChannel();
+      channel1 = messageChannel.port1;
+      channel2 = messageChannel.port2;
+let x = 0;
   //columns = [{name:'To Do'}, {name: 'In Progress'}, {name: 'Done'}, {name : 'new'}, {name: 'lol'}];
 
 class ColumnManager {
@@ -119,6 +123,8 @@ class ColumnManager {
   // Initialize
   const columnManager = new ColumnManager();
   columnManager.initColumns();
+
+
 class Note {
     constructor(title, text, x, y){
       this.title = title;
@@ -127,6 +133,8 @@ class Note {
       this.y = y;
       this.attachedToColumn = null;
       this.hoverTimer = null;
+      this.hoverInterval = null;
+      this.isMoving = false;
       this.noteId = 0;
     }
 
@@ -200,7 +208,11 @@ class Note {
         note.rect.fill(color_pick.value);
         lol(textNode)
       });
+      note.group.on('dragstart', () => {
+        this.startHoverTimer(note.group);
+      })
       note.group.on('dragend', function(){
+        channel2.postMessage("dragend");
         const nodeId = note.group.id();
         const positi_on = note.group.getAbsolutePosition();
         let index = 0
@@ -235,89 +247,119 @@ class Note {
         TaskTextEditor(local_parent, note.titleText, stageBox, 'title', note.rect);
       });
       note.group.on('dragmove', () => {
-        note.group.isDragging();
-        this.checkAttachment(note.group);
-        this.startHoverTimer();
+        channel2.postMessage("position changed");
       });
       //Add hover functionality
       note.group.on('mouseenter', () => {
-        this.startHoverTimer(note.group);
+        //lol(note.group)
+        //this.startHoverTimer(note.group);
+        //this.hoverManager.start();
       });
       note.group.on('mouseleave', () => {
-        this.clearHoverTimer();
       });
       return note.group;
     };
 
-    /// TODO: Column should change the color, when the task is dragged over it, to show that it is about to be attached ///
+    startHoverTimer(taskGroup) {
+      lol(x++)
+      const clear = this.clearHoverTimer();
+      let originalFill = null;
+      let nearestColumn = null;
+      let doAttach = false;
+      lol(taskGroup);
+      if (this.checkAttachment(taskGroup) != null) {
+        return;
+      }
 
-    hoverManager = () => {
       
-    }
-    async startHoverTimer(taskGroup) {
-      this.clearHoverTimer();
-      taskGroup.isDragging() == false ? this.clearHoverTimer() : lol("is being dragged");
-      let nearestColumn = this.getNearestColumn(taskGroup);
-      let pre = nearestColumn.getChildren()[1].fill();
-      lol(nearestColumn)
-      nearestColumn.getChildren()[1].fill("#f00");
-      const interval = setInterval(() => {
-        if (taskGroup.attachedToColumn != nearestColumn.attrs.id) {
-          nearestColumn = this.getNearestColumn(taskGroup);
-          nearestColumn.getChildren()[1].fill("#f00");
-          this.hoverTimer = setTimeout(() => {
-            taskGroup.isDragging() == false ? lol("skip") : this.attachToColumn(taskGroup, nearestColumn);
-          }, 4000);
+      const timer = () => {
+        try {
+          
+          if (nearestColumn && taskGroup.attachedToColumn !== nearestColumn.attrs.id) {
+            throw new Error("nearestColumn is null");
+          }
+            
+            
+            nearestColumn = this.getNearestColumn(taskGroup);
+            console.log("Nearest column:", nearestColumn);
+            originalFill = nearestColumn.getChildren()[1].fill();
+            lol(nearestColumn)
+            nearestColumn.getChildren()[1].fill("#f00");
+            ColumnLayer.draw()
+            
+            channel1.onmessage = (e) => {
+              if (e.data == "position changed") {
+                lol("position changed");
+                nearestColumn.getChildren()[1].fill(originalFill);
+                doAttach = false;
+                return;
+              }
+            };
+            channel1.onmessage = (e) => {
+              if (e.data == "dragend") {
+                throw new Error("Dragend");
+              }
+            }
+
+          
+        } 
+        catch (error) {
+          switch (error.message) {
+            case "nearestColumn is null":
+              console.error("Nearest column is null");
+              break;
+            case "Dragend":
+              doAttach == true ? this.attachToColumn(taskGroup, nearestColumn) : null;
+              nearestColumn.getChildren()[1].fill(originalFill);
+              lol(taskGroup.attachedToColumn);
+              console.error("Dragend");
+              clearInterval(this.hoverInterval);
+              break; 
+            default:
+              console.error("Unknown error:", error);
+              break;
+          }
+        } finally {
+          if (doAttach == true) {
+            doAttach = false;
+          }
+          
+          return;
+        }};
+        this.hoverInterval = setInterval(timer, 1000);
+        while (this.hoverInterval !== null) {
+            this.hoverTimer = setTimeout(() => {
+                nearestColumn.getChildren()[1].fill("#f00");
+                ColumnLayer.draw()
+                doAttach = true;
+            }, 250);
+            
         }
-        nearestColumn.getChildren()[1].fill(pre);
-      }, 500)
-      
+      //this.hoverInterval === null && this.hoverInterval.length > 1 ? this.hoverInterval = setInterval(timer, 500) : null;
     }
-  
     clearHoverTimer() {
+      lol("clear")
+      if (this.hoverInterval) {
+        clearInterval(this.hoverInterval);
+        this.hoverInterval = null;
+      }
       if (this.hoverTimer) {
-        clearInterval("interval")
         clearTimeout(this.hoverTimer);
         this.hoverTimer = null;
       }
+      ColumnLayer.find('.column').fill("#dddddda6")
+      return;
     }
+
+
     getNearestColumn(taskGroup) {
       const columns = ColumnLayer.find('.column');
       let nearestColumn = null;
       let minDistance = Infinity;
       const maxDistance = 50; // Maximum distance for attachment
-      lol(taskGroup.getClientRect())
-      nearestColumn = columns.filter(column => Konva.Util.haveIntersection(taskGroup.getClientRect() , column.getClientRect()) & Konva.Util.haveIntersection(taskGroup.getAbsolutePosition() , column.getClientRect()) == true);
-      //nearestColumn = nearestColumns.forEach(column => taskGroup.getClientRect() - column.getClientRect() < minDistance && taskGroup.getClientRect() - column.getClientRect() > maxDistance ? nearestColumn = column : nearestColumn = nearestColumn);
-      lol(nearestColumn)
-        //earestColumn = column;
-      
+      nearestColumn = columns.filter(column => Konva.Util.haveIntersection(taskGroup.getClientRect() , column.getClientRect()) & Konva.Util.haveIntersection(taskGroup.getAbsolutePosition() , column.getClientRect()) == true);      
       return nearestColumn[0];
     }
-
-
-  /**
-   * Attaches the given task group to the nearest column if there is an intersection between the task group's rectangle and the column's rectangle.
-   *
-   * @param {Konva.Group} taskGroup - The task group to attach to a column.
-   * @return {void} This function does not return anything.
-   */
-    // attachToNearestColumn(taskGroup) {
-    //   const columns = ColumnLayer.find('.column');
-    //   columns.forEach((column) => {
-    //     if (Konva.Util.haveIntersection(taskGroup.getClientRect(), column.getClientRect())) {
-    //       nearestColumn = column;
-    //       lol(nearestColumn)
-    //       return ; // Break the loop if we find an intersecting column
-    //     }
-    //   });
-  
-    //   if (nearestColumn.x) {
-    //     lol("this")
-    //     this.attachToColumn(taskGroup, nearestColumn);
-    //   }
-    // }
-  
     attachToColumn(taskGroup, column) {
       lol(taskGroup + " " + column)
       this.attachedToColumn = column.attrs.id;
