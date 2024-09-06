@@ -1,0 +1,83 @@
+# Project Overview
+
+* Project Name: WhiteBoard
+* Description: A personal whiteboard application for creating and sharing notes.
+* Goals: We aim to create a user-friendly and intuitive whiteboard application that allows users to create, share, and collaborate on notes.
+* Scope: The project will focus on developing a web-based whiteboard application that allows users to create, edit, and share notes.
+
+## System Architecture
+
+* Components:
+  - Frontend: Konva Based JScript Application
+  - Backend: KanbanApi for Kanban Board
+  - Database: PostgreSQL for storing user data and notes
+  - Authentication: 
+  - Real-time collaboration: Socket.io for live updates
+  - File storage: AWS S3 for storing uploaded images and files
+  - API: RESTful API for communication between frontend and backend
+  
+* Modules: 
+  - Worker : Manages the whole application
+  - Kanban.js : Manages the functions of the Kanban Board
+  - loadkanban : Is responsible for loading the kanban board
+  - sendBoard : Is responsible for sending the board to the server
+  - displayTickets : Responsible for displaying the tickets
+  - start : Responsible for initiating the server Request to then load the kanban board
+
+* Technologies: 
+    - bootstrap.css
+    - bootstrap.js
+    - bootstap-icons
+    - konva.js
+    - jquery.js
+    - zlib.js
+
+## Functional Requirements
+
+* Features: 
+  - Create and edit notes
+  - Responsive design
+  - Mobile-friendly interface
+  - Performance optimization
+  - Scalability
+
+* To be Implemented: 
+  - Collaboration features
+  - Share notes with others
+  - Collaborate on notes in real-time
+  - Upload and share images and files
+  - Export notes as PDF or image files
+  - User authentication and authorization
+  - Integration with other applications
+  - Version control
+  - Accessibility
+  - Security
+  - Backup and recovery
+  - Documentation
+
+* Functionalities: [List key functionalities of the system]
+
+## Technical Requirements
+
+* Programming Languages: 
+  - JavaScript
+  - HTML
+  - CSS
+* Frameworks: [List frameworks used]
+* Databases: [List databases used]
+
+## API Documentation
+
+* [Insert API endpoint documentation, including request and response formats, and any relevant notes]
+
+## Code Structure
+
+* [Insert overview of code structure, including directory layout and file organization]
+
+## Functions and Variables
+
+* [Insert documentation for specific functions and variables, including descriptions, parameters, and return values]
+
+## Notes
+
+* [Insert any additional notes or comments about the project]

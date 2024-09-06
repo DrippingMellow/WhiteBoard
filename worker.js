@@ -6,8 +6,9 @@ globalThis.o = 0
 //var n = 0 //iterator for NoteID 
 let state = []
 globalThis: state  //Tasks 
-let requestId = null //ID for request
+let requestId = 13 //ID for request
 globalThis: requestId;
+globalThis: UserId = 1
 const board = 0
 globalThis: board
 
@@ -88,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
         startButton.style.display = 'none';
         backupId.parentElement.style.display = 'none';
         startup();
-        
     } else {
         startButton.style.display = 'block';
         startButton.addEventListener('click', () => {
@@ -96,4 +96,13 @@ document.addEventListener("DOMContentLoaded", () => {
             startup();
         })
     } 
+});
+
+//On leave show confrim message to remind to save the board
+window.addEventListener('beforeunload', (event) => {
+    const shouldLeave = confirm("Are you sure you want to leave? Your changes will not be saved.");
+    if (!shouldLeave) {
+        event.preventDefault();
+        event.returnValue = "";
+    }
 });

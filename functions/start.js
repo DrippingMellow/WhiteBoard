@@ -66,3 +66,28 @@ async function start() {
 		console.log("done");
 	});
 }
+
+/**
+ * Retrieves the current user's data from the server.
+ * @returns {Object} The user data returned from the server.
+ */
+function getUser() {
+	const requestURL = UrlAdress + "/api/GetUser/" + UserId;
+	$.ajax({
+		url: requestURL,
+		crossDomain: true,
+		dataType: 'json',
+		contentType: 'application/json',
+		success: function (data) {
+			try {
+				return data;
+			}
+			catch (error) {
+				console.error("No data:", error);
+			}
+		},
+		error: function (jqXHR, textStatus, errorThrown) {
+			console.error('Error:', textStatus, errorThrown);
+		}
+	})
+}
